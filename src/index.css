@@ -1,0 +1,30 @@
+/* // {user.isAuth ?
+  //     <Nav className="d-flex gap-2 align-items-center">
+  //         <Nav.Link href="#" onClick={() => navigate(ADMIN_ROUTE)}>Admin panel</Nav.Link>
+  //         <Nav.Link href="#" onClick={logOut}>Вийти</Nav.Link>
+  //     </Nav>
+  //     :
+  //     <Nav>
+  //         <Nav.Link href="#" variant="outline-success" onClick={() => navigate(LOGIN_ROUTE)}>Авторизуватися</Nav.Link>
+  //     </Nav>
+  // }
+
+
+
+  // const { user } = useContext(Context)
+  // const navigate = useNavigate()
+
+  // const logOut = () =>{
+  //     user.setUser({})
+  //     user.setIsAuth(false)
+  //     // navigate(SHOP_ROUTE)
+  // }
+
+  // import React, { useContext } from "react";
+import * as React from 'react';
+
+import { Context } from "..";
+
+import { ADMIN_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
+import { observer } from "mobx-react-lite";
+import { useNavigate } from "react-router-dom"; */

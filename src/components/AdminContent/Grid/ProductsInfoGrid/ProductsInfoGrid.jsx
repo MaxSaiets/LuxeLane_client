@@ -1,0 +1,340 @@
+import React, { useState, useEffect } from 'react';
+
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import UpdateIcon from '@mui/icons-material/Update';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Close';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import IconButton from '@mui/material/IconButton';
+
+import {
+  GridRowModes,
+  DataGrid,
+  GridToolbarContainer,
+  GridActionsCellItem,
+  GridRowEditStopReasons,
+} from '@mui/x-data-grid';
+import NewProductPopup from './Popups/NewProductPopup';
+import { addNewProduct } from '../../../../http/productApi';
+
+function EditToolbar(props) {
+  const { setRows, setRowModesModel, rows, updateData, open, handleClose, handleOpen, handleSave, newRecord, setNewRecord } = props;
+
+  const handleClick = () => {
+
+    handleOpen();
+  };
+  const handleClickUpdateTable = () => {
+    updateData().then(data => setRows(data));
+  };
+
+  return (
+    <GridToolbarContainer>
+      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+        Add record
+      </Button>
+
+      <NewProductPopup 
+        open={open} 
+        handleClose={handleClose} 
+        handleSave={handleSave} 
+        newRecord={newRecord} 
+        setNewRecord={setNewRecord} 
+      />
+
+      <Button color="primary" startIcon={<UpdateIcon />} onClick={handleClickUpdateTable}>
+        Update table
+      </Button>
+    </GridToolbarContainer>
+  );
+}
+
+const ProductsInfoGrid = ({ data, updateData}) => {
+  const [rows, setRows] = useState(data);
+  const [open, setOpen] = useState(false);
+  const [newRecord, setNewRecord] = useState({});
+
+  useEffect(() => {
+    setRows(data);
+  }, [data]);
+
+  const [rowModesModel, setRowModesModel] = React.useState({});
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSave = async () => {
+    try {
+      let formData = new FormData();
+
+      formData.append('title', newRecord.title);
+      formData.append('price', newRecord.price);
+      formData.append('subCategories', JSON.stringify(newRecord.subCategories));
+      formData.append('categories', JSON.stringify(newRecord.categories));
+      formData.append('brands', JSON.stringify(newRecord.brands));
+      formData.append('types', JSON.stringify(newRecord.types));
+
+      // formData.append('previewImage', newRecord.previewImage);
+      formData.append('productImages', newRecord.previewImage);
+
+      for (let file of newRecord.additionalImages) {
+        formData.append('productImages', file);
+      }
+     
+      await addNewProduct(formData);
+      
+      const updatedData = await updateData();
+      setRows(updatedData);
+    } catch (error) {
+      console.error("Error handleSave: ", error.message);
+    }
+
+    setOpen(false);
+    setNewRecord({});
+  };
+  const handleRowEditStop = (params, event) => {
+    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+      event.defaultMuiPrevented = true;
+    }
+  };
+
+  const handleEditClick = (id) => () => { 
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+  };
+
+  const handleDeleteClick = (id) => async() => {
+    // await deleteSubCategory(id);
+    
+    setRows(rows.filter((row) => row.id !== id));
+  };
+
+  const handleCancelClick = (id) => () => {
+    setRowModesModel({
+      ...rowModesModel,
+      [id]: { mode: GridRowModes.View, ignoreModifications: true },
+    });
+
+    const editedRow = rows.find((row) => row.id === id);
+    if (editedRow.isNew) {
+      setRows(rows.filter((row) => row.id !== id));
+    } 
+  };
+
+  const handleSaveClick = (id) => () => {
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+  };
+
+  const processRowUpdate = async (newRow) => {
+    let errors, isValid;
+
+    if(newRow.isNew === true) {
+      // ({ errors, isValid } = ValidationNewUserForm(newRow));
+    } else {
+      // ({ errors, isValid } = ValidationUpdateUserForm(newRow));
+    }
+    
+    const updatedRow = { ...newRow, errors, isNew: false, createdAt: new Date().toISOString() };
+    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+  };
+
+  const handleProcessRowUpdateError = (error) => {
+    console.error('Error during row update:', error);
+    // Додаткова логіка обробки помилол
+  };
+  
+  const handleRowModesModelChange = (newRowModesModel) => {
+    setRowModesModel(newRowModesModel);
+  };
+
+  const columns = [
+    { 
+      field: 'id',
+      headerName: 'ID',
+      width: 90 
+    },
+    {
+      field: 'title',
+      headerName: 'title',
+      width: 150,
+      editable: false,
+      renderCell: (params) => {
+        const hasError = params.row.errors && params.row.errors.title;
+        return (
+          <div>
+            {params.row.title}
+            {hasError && <div style={{ color: 'red' }}>{params.row.errors.title}</div>}
+          </div>
+        );
+      },
+    },
+    {
+      field: 'price',
+      headerName: 'Price',
+      width: 100,
+    },
+    {
+      field: 'categories',
+      headerName: 'Categories',
+      width: 200,
+      renderCell: (params) => {
+        return (
+          <ul>
+            {params.row.categories.map((category) => (
+              <li key={category.id}>{category.name}</li>
+            ))}
+          </ul>
+        );
+      },
+    },
+    {
+      field: 'subCategories',
+      headerName: 'Subcategories',
+      width: 200,
+      renderCell: (params) => (
+        <ul>
+          {params.row.subCategories.map((subCategory) => (
+            <li key={subCategory.id}>{subCategory.name}</li>
+          ))}
+        </ul>
+      ),
+    },
+    {
+      field: 'brands',
+      headerName: 'Brands',
+      width: 200,
+      renderCell: (params) => (
+        <ul>
+          {params.row.brands.map((brand) => (
+            <li key={brand.id}>{brand.name}</li>
+          ))}
+        </ul>
+      ),
+    },
+    {
+      field: 'types',
+      headerName: 'Types',
+      width: 150,
+      renderCell: (params) => (
+        <ul>
+          {params.row.types.map((type) => (
+            <li key={type.id}>{type.name}</li>
+          ))}
+        </ul>
+      ),
+    },
+    {
+      field: 'createdAt',
+      headerName: 'Created At',
+      width: 180,
+      valueGetter: (params) => {
+          const formattedDateTime = new Date(params.row.createdAt).toLocaleString();
+          return formattedDateTime;
+      },
+    },
+    {
+      field: 'updatedAt',
+      headerName: 'Updated At',
+      width: 200,
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      width: 100,
+      cellClassName: 'actions',
+      getActions: ({ id }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              sx={{
+                color: 'primary.main',
+              }}
+              onClick={handleSaveClick(id)}
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
+
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+        ];
+      },
+    },
+  ];
+
+  return (
+    <Box
+      sx={{
+        height: 500,
+        
+        '& .actions': {
+          color: 'text.secondary',
+        },
+        '& .textPrimary': {
+          color: 'text.primary',
+        },
+      }}
+    >
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        editMode="row"
+        rowModesModel={rowModesModel}
+        onRowModesModelChange={handleRowModesModelChange}
+        onRowEditStop={handleRowEditStop}
+        processRowUpdate={processRowUpdate}
+        slots={{
+          toolbar: EditToolbar,
+        }}
+        slotProps={{
+          toolbar: { 
+            setRows, 
+            setRowModesModel, 
+            rows, 
+            updateData, 
+            open, 
+            handleClose, 
+            handleSave, 
+            newRecord, 
+            setNewRecord,
+            handleOpen
+          },
+        }}
+        onProcessRowUpdateError={handleProcessRowUpdateError}
+      />
+
+    </Box>
+  );
+}
+
+export default ProductsInfoGrid;
