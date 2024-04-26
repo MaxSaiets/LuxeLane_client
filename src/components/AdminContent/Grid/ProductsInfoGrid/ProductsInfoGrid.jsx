@@ -18,8 +18,11 @@ import {
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
+import { addNewProduct, deleteProduct } from '../../../../http/productApi';
+import { deleteImage, uploadImage } from '../../../../http/fireBaseStorageUploadApi';
+
 import NewProductPopup from './Popups/NewProductPopup';
-import { addNewProduct } from '../../../../http/productApi';
+import EditProductPopup from './Popups/EditProductPopup';
 
 function EditToolbar(props) {
   const { setRows, setRowModesModel, rows, updateData, open, handleClose, handleOpen, handleSave, newRecord, setNewRecord } = props;
@@ -58,6 +61,9 @@ const ProductsInfoGrid = ({ data, updateData}) => {
   const [open, setOpen] = useState(false);
   const [newRecord, setNewRecord] = useState({});
 
+  const [modalForEditIsOpen, setModalForEditIsOpen] = useState(false);
+  const [currentRow, setCurrentRow] = useState(null);
+
   useEffect(() => {
     setRows(data);
   }, [data]);
@@ -72,25 +78,61 @@ const ProductsInfoGrid = ({ data, updateData}) => {
   };
 
   const handleSave = async () => {
-    try {
-      let formData = new FormData();
+    //try {
+      //let formData = new FormData();
 
-      formData.append('title', newRecord.title);
-      formData.append('price', newRecord.price);
-      formData.append('subCategories', JSON.stringify(newRecord.subCategories));
-      formData.append('categories', JSON.stringify(newRecord.categories));
-      formData.append('brands', JSON.stringify(newRecord.brands));
-      formData.append('types', JSON.stringify(newRecord.types));
+      //formData.append('title', newRecord.title);
+      //formData.append('price', newRecord.price);
+      //formData.append('subCategories', JSON.stringify(newRecord.subCategories));
+      //formData.append('categories', JSON.stringify(newRecord.categories));
+      //formData.append('brands', JSON.stringify(newRecord.brands));
+      //formData.append('types', JSON.stringify(newRecord.types));
 
-      // formData.append('previewImage', newRecord.previewImage);
-      formData.append('productImages', newRecord.previewImage);
+      //const previewImageUrl = await uploadImage(newRecord.previewImage, 'products/');
+      //formData.append('previewImage', previewImageUrl);
 
-      for (let file of newRecord.additionalImages) {
-        formData.append('productImages', file);
-      }
+      //const additionalImagesUrls = await Promise.all(newRecord.additionalImages.map(file => uploadImage(file, 'products/')));
+      //additionalImagesUrls.forEach(url => {
+        //formData.append('productImages', url);
+      //});
      
-      await addNewProduct(formData);
+      //await addNewProduct(formData);
       
+      //const updatedData = await updateData();
+      //setRows(updatedData);
+    //} catch (error) {
+      //console.error("Error handleSave: ", error.message);
+    //}
+
+    //setOpen(false);
+    //setNewRecord({});
+
+    try{
+      const data = {
+        title: newRecord.title,
+        price: newRecord.price,
+        subCategories: newRecord.subCategories,
+        categories: newRecord.categories,
+        brands: newRecord.brands,
+        types: newRecord.types,
+      };
+  
+      if (newRecord.previewImage) {
+        const { name, url } = await uploadImage(newRecord.previewImage, 'products/');
+        data.previewImageName = name;
+        data.previewImageUrl = url;
+      }
+      
+      if (newRecord.additionalImages && newRecord.additionalImages.length > 0) {
+        const additionalImagesUrls = await Promise.all(newRecord.additionalImages.map(file => uploadImage(file, 'products/')));
+        data.additionalImages = additionalImagesUrls.map((url, index) => ({
+          name: newRecord.additionalImages[index].name,
+          url
+        }));
+      }
+
+      await addNewProduct(data);
+
       const updatedData = await updateData();
       setRows(updatedData);
     } catch (error) {
@@ -99,7 +141,9 @@ const ProductsInfoGrid = ({ data, updateData}) => {
 
     setOpen(false);
     setNewRecord({});
+    
   };
+
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
@@ -107,12 +151,22 @@ const ProductsInfoGrid = ({ data, updateData}) => {
   };
 
   const handleEditClick = (id) => () => { 
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    const row = rows.find((row) => row.id === id);
+    console.log("handleEditClick", row)
+    setCurrentRow(row);
+    setModalForEditIsOpen(true);
   };
 
   const handleDeleteClick = (id) => async() => {
-    // await deleteSubCategory(id);
-    
+    const product = rows.find((row) => row.id === id);
+    if (product && product.images && product.images.length > 0) {
+      for (const image of product.images) {
+        const imagePath = 'products/' + image.imgName;
+        await deleteImage(imagePath);
+      }
+    }
+  
+    await deleteProduct(id);
     setRows(rows.filter((row) => row.id !== id));
   };
 
@@ -333,6 +387,13 @@ const ProductsInfoGrid = ({ data, updateData}) => {
         onProcessRowUpdateError={handleProcessRowUpdateError}
       />
 
+        <EditProductPopup 
+          setModalForEditIsOpen={setModalForEditIsOpen}
+          modalForEditIsOpen={modalForEditIsOpen}
+          currentRow={currentRow}
+          updateData={updateData}
+          setRows={setRows}
+        />
     </Box>
   );
 }

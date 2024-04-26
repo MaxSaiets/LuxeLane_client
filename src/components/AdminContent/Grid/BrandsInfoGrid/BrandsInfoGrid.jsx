@@ -19,6 +19,7 @@ import {
 
 import NewBrandPopup from './Popups/NewBrandPopup';
 import { addNewBrand, deleteBrand, updateBrand } from '../../../../http/brandApi';
+import EditBrandPopup from './Popups/EditBrandPopup';
 
 function EditToolbar(props) {
   const { setRows, setRowModesModel, rows, updateData, open, handleClose, handleOpen, handleSave, newRecord, setNewRecord } = props;
@@ -56,6 +57,9 @@ const BrandsInfoGrid = ({ data, updateData}) => {
   const [open, setOpen] = useState(false);
   const [newRecord, setNewRecord] = useState({ name: '', id: null });
 
+  const [modalForEditIsOpen, setModalForEditIsOpen] = useState(false);
+  const [currentRow, setCurrentRow] = useState(null);
+
   useEffect(() => {
     setRows(data);
   }, [data]);
@@ -89,7 +93,9 @@ const BrandsInfoGrid = ({ data, updateData}) => {
   };
 
   const handleEditClick = (id) => () => { 
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    const row = rows.find((row) => row.id === id);
+    setCurrentRow(row);
+    setModalForEditIsOpen(true);
   };
 
   const handleDeleteClick = (id) => async() => {
@@ -277,6 +283,13 @@ const BrandsInfoGrid = ({ data, updateData}) => {
         onProcessRowUpdateError={handleProcessRowUpdateError}
       />
 
+        <EditBrandPopup 
+          setModalForEditIsOpen={setModalForEditIsOpen}
+          modalForEditIsOpen={modalForEditIsOpen}
+          currentRow={currentRow}
+          updateData={updateData}
+          setRows={setRows}
+        />
     </Box>
   );
 }

@@ -29,9 +29,10 @@ export const deleteType = async (id) => {
         throw error;
     }
 }
-export const updateType = async (data) => {
+export const updateType = async (id, data) => {
     try {
-        const response = await $adminHost.put('api/type/updateType/' + data.id, {name: data.name});
+        const response = await $adminHost.put(`api/type/updateType/${id}`, data);
+        
         return response;
     } catch (error) {
         console.error("Error updateType: ", error.message);

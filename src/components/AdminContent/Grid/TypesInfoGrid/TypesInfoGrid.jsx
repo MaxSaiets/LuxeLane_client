@@ -17,8 +17,10 @@ import {
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
 
-import NewTypePopup from './Popups/NewTypePopup';
 import { addNewType, deleteType, updateType } from '../../../../http/typeApi';
+
+import NewTypePopup from './Popups/NewTypePopup';
+import EditTypePopup from './Popups/EditTypePopup';
 
 function EditToolbar(props) {
   const { setRows, setRowModesModel, rows, updateData, open, handleClose, handleOpen, handleSave, newRecord, setNewRecord } = props;
@@ -56,6 +58,9 @@ const TypesInfoGrid = ({ data, updateData}) => {
   const [open, setOpen] = useState(false);
   const [newRecord, setNewRecord] = useState({ name: '', id: null });
 
+  const [modalForEditIsOpen, setModalForEditIsOpen] = useState(false);
+  const [currentRow, setCurrentRow] = useState(null);
+
   useEffect(() => {
     setRows(data);
   }, [data]);
@@ -89,7 +94,9 @@ const TypesInfoGrid = ({ data, updateData}) => {
   };
 
   const handleEditClick = (id) => () => { 
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    const row = rows.find((row) => row.id === id);
+    setCurrentRow(row);
+    setModalForEditIsOpen(true);
   };
 
   const handleDeleteClick = (id) => async() => {
@@ -276,6 +283,13 @@ const TypesInfoGrid = ({ data, updateData}) => {
         onProcessRowUpdateError={handleProcessRowUpdateError}
       />
 
+        <EditTypePopup 
+          setModalForEditIsOpen={setModalForEditIsOpen}
+          modalForEditIsOpen={modalForEditIsOpen}
+          currentRow={currentRow}
+          updateData={updateData}
+          setRows={setRows}
+        />
     </Box>
   );
 }

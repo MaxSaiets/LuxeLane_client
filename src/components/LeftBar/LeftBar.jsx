@@ -28,7 +28,7 @@ const LeftBar = observer(() => {
         <BlockInfoSimple blockTitle="Information about the company" data={infoUserBlocks.blockAboutCompanyData} />
           
         <BlockInfoSimple blockTitle="Help" data={infoUserBlocks.blockHelpData} />
-          
+        
       </Box>
     </Box>
   );

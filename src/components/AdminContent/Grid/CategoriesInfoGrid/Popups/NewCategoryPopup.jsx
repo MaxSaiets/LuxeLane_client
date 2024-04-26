@@ -2,17 +2,18 @@ import React, { useState } from 'react';
 import { Box, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button } from '@mui/material';
 import ImageListItem from '@mui/material/ImageListItem';
 import { deleteImgCategory, getCategoriesIcons } from '../../../../../http/categoryApi';
+import { deleteImage } from '../../../../../http/fireBaseStorageUploadApi';
 
 
 const ImageListItemWithButtons = ({ item, handleIconSelect, handleIconDelete}) => {
- 
+  
   return(
     <ImageListItem 
       key={item.id}
     >
       <img
-        src={item.fileUrl}
-        alt={item.fileName}
+        src={item.imgSrc}
+        alt={item.imgName}
         loading="lazy"
         style={{ cursor: 'pointer'}}
       />
@@ -55,11 +56,13 @@ const NewCategoryPopup = ({ open, handleClose, handleSave, newRecord, setNewReco
   const [iconDialogOpen, setIconDialogOpen] = useState(false);
   const [data, setData] = useState([]);
 
+  const [previewImg, setPreviewImg] = useState();
+
   const handleSelectIcons = async () => {
     try {
       const response = await getCategoriesIcons();
 
-      setData(response.data);
+      setData(response);
       setIconDialogOpen(true);
     } catch (error) {
       console.error("Error fetching icons: ", error);        
@@ -71,6 +74,9 @@ const NewCategoryPopup = ({ open, handleClose, handleSave, newRecord, setNewReco
     setIconDialogOpen(false);
   };
   const handleIconDelete = async (icon) => {
+    const imagePath = 'categories/' + icon.imgName;
+    await deleteImage(imagePath);
+
     await deleteImgCategory(icon.id);
     handleSelectIcons();
   };
@@ -78,6 +84,9 @@ const NewCategoryPopup = ({ open, handleClose, handleSave, newRecord, setNewReco
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     setNewRecord({ ...newRecord, icon: file });
+
+    const previewURL = URL.createObjectURL(file);
+    setPreviewImg(previewURL);
   };
 
   return (
@@ -106,7 +115,23 @@ const NewCategoryPopup = ({ open, handleClose, handleSave, newRecord, setNewReco
           Select or add a new icon
         </Typography>
 
+
         <Box sx={{ display: "flex", gap: "15px", alignItems: "center" }}>
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ display: { xs: 'none', sm: 'block' } }}
+          >
+            Icon
+          </Typography>
+          
+          <img
+            src={previewImg}
+            alt={""}
+            style={{ width: "50px", height: "50px", cursor: 'pointer'}}
+          />
+
           <Button onClick={handleSelectIcons} variant="contained" >Select</Button>
 
           <input 

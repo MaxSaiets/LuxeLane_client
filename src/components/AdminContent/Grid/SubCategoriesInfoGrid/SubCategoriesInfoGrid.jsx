@@ -20,6 +20,8 @@ import {
 } from '@mui/x-data-grid';
 import NewCategoryPopup from './Popups/NewSubCategoryPopup';
 import { addNewSubCategory, deleteSubCategory } from '../../../../http/subCategoryApi';
+import { deleteImage, uploadImage } from '../../../../http/fireBaseStorageUploadApi';
+import EditSubCategoryPopup from './Popups/EditSubCategoryPopup';
 
 function EditToolbar(props) {
   const { setRows, setRowModesModel, rows, updateData, open, handleClose, handleOpen, handleSave, newRecord, setNewRecord } = props;
@@ -57,6 +59,9 @@ const SubCategoriesInfoGrid = ({ data, updateData}) => {
   const [open, setOpen] = useState(false);
   const [newRecord, setNewRecord] = useState({ nameOfSubCategory: '', subCategoryId: null });
 
+  const [modalForEditIsOpen, setModalForEditIsOpen] = useState(false);
+  const [currentRow, setCurrentRow] = useState(null);
+
   useEffect(() => {
     setRows(data);
   }, [data]);
@@ -73,14 +78,18 @@ const SubCategoriesInfoGrid = ({ data, updateData}) => {
   const handleSave = async (event) => {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append('nameOfSubCategory', newRecord.nameOfSubCategory);
-    formData.append('subCategoryId', newRecord.subCategoryId);
-    formData.append('iconId', newRecord.icon.id);
-    formData.append('file', newRecord.icon);
+    const data = {
+      nameOfSubCategory: newRecord.nameOfSubCategory,
+      subCategoryId: newRecord.subCategoryId,
+      existingImageId: newRecord.icon.id,
+    };
 
     try {
-      await addNewSubCategory(formData);
+      const { name, url} = await uploadImage(newRecord.icon, 'subCategories/');
+      data.imageName = name;
+      data.imageUrl = url;
+
+      await addNewSubCategory(data);
       const updatedData = await updateData();
       setRows(updatedData);
     } catch (error) {
@@ -89,6 +98,7 @@ const SubCategoriesInfoGrid = ({ data, updateData}) => {
     setOpen(false);
     setNewRecord({ nameOfSubCategory: '', subCategoryId: null });
   };
+  
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
@@ -96,12 +106,22 @@ const SubCategoriesInfoGrid = ({ data, updateData}) => {
   };
 
   const handleEditClick = (id) => () => { 
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    const row = rows.find((row) => row.id === id);
+    setCurrentRow(row);
+    setModalForEditIsOpen(true);
+
+    // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
   const handleDeleteClick = (id) => async() => {
+    const subCategory = rows.find((row) => row.id === id);
+    if (subCategory && subCategory.images && subCategory.images.length > 0) {
+      const image = subCategory.images[0];
+      const imagePath = 'subCategories/' + image.imgName;
+      await deleteImage(imagePath);
+    }
+
     await deleteSubCategory(id);
-    
     setRows(rows.filter((row) => row.id !== id));
   };
 
@@ -305,6 +325,14 @@ const SubCategoriesInfoGrid = ({ data, updateData}) => {
         }}
         onProcessRowUpdateError={handleProcessRowUpdateError}
       />
+ 
+        <EditSubCategoryPopup 
+          setModalForEditIsOpen={setModalForEditIsOpen}
+          modalForEditIsOpen={modalForEditIsOpen}
+          currentRow={currentRow}
+          updateData={updateData}
+          setRows={setRows}
+        />
 
     </Box>
   );

@@ -87,6 +87,7 @@ const CategoryExplorerContent = observer(() => {
                     <Grid container spacing={2}>
                         {subCategTypesData.map((subCategory, index) => {
                             const subCategoryName = Object.keys(subCategory)[0];
+                            console.log(subCategories)
                             const subCategoryData = subCategories.find(sc => sc.name === subCategoryName);
 
                             return (

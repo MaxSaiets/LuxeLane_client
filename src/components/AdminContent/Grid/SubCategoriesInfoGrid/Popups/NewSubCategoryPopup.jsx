@@ -4,6 +4,8 @@ import { getCategoriesNameId } from '../../../../../http/categoryApi';
 import { ListItem, ListItemText } from '@mui/material';
 import ImageListItem from '@mui/material/ImageListItem';
 import { getSubCategoriesIcons, deleteImgSubCategory } from '../../../../../http/subCategoryApi';
+import { deleteImage } from '../../../../../http/fireBaseStorageUploadApi';
+import CategorySelectDialog from './CategorySelectDialog';
 
 const ImageListItemWithButtons = ({ item, handleIconSelect, handleIconDelete}) => {
  
@@ -12,8 +14,8 @@ const ImageListItemWithButtons = ({ item, handleIconSelect, handleIconDelete}) =
       key={item.id}
     >
       <img
-        src={item.fileUrl}
-        alt={item.fileName}
+        src={item.imgSrc}
+        alt={item.imgName}
         loading="lazy"
         style={{ cursor: 'pointer'}}
       />
@@ -52,28 +54,8 @@ const IconSelectDialog = ({ open, handleClose, handleIconSelect, handleIconDelet
   );
 };
 
-const CategorySelectDialog = ({ open, handleClose, handleItemSelect, data }) => {
-  return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Select category for subCategory</DialogTitle>
-      <DialogContent>
-        <Box sx={{width: "100%", display: "flex", flexWrap: "wrap", gap: "15px"}}>
-        {data.map((item) => (
-          <ListItem button key={item.id} onClick={() => handleItemSelect(item)}>
-            <ListItemText primary={item.name} />
-          </ListItem>
-        ))}
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
-
 const NewCategoryPopup = ({ open, handleClose, handleSave, newRecord, setNewRecord }) => {
-  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+    const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
   const [iconDialogOpen, setIconDialogOpen] = useState(false);
   const [data, setData] = useState([]);
 
@@ -101,7 +83,7 @@ const NewCategoryPopup = ({ open, handleClose, handleSave, newRecord, setNewReco
     try {
       const response = await getSubCategoriesIcons();
 
-      setDataIcons(response.data);
+      setDataIcons(response);
       setIconDialogOpen(true);
     } catch (error) {
       console.error("Error fetching icons: ", error);        
@@ -113,6 +95,9 @@ const NewCategoryPopup = ({ open, handleClose, handleSave, newRecord, setNewReco
     setIconDialogOpen(false);
   };
   const handleIconDelete = async (icon) => {
+    const imagePath = 'subCategories/' + icon.imgName;
+    await deleteImage(imagePath);
+
     await deleteImgSubCategory(icon.id);
     handleSelectIcons();
   };
@@ -124,7 +109,7 @@ const NewCategoryPopup = ({ open, handleClose, handleSave, newRecord, setNewReco
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Add New Category</DialogTitle>
+      <DialogTitle>Add New SubCategory</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Please fill the information below:

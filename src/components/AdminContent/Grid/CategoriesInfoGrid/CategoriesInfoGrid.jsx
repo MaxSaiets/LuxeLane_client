@@ -20,6 +20,8 @@ import {
 } from '@mui/x-data-grid';
 import NewCategoryPopup from './Popups/NewCategoryPopup';
 import { addNewCategory, deleteCategory } from '../../../../http/categoryApi';
+import { deleteImage, uploadImage } from '../../../../http/fireBaseStorageUploadApi';
+import EditCategoryPopup from './Popups/EditCategoryPopup';
 
 function EditToolbar(props) {
   const { setRows, setRowModesModel, rows, updateData, open, handleClose, handleOpen, handleSave, newRecord, setNewRecord } = props;
@@ -70,6 +72,9 @@ const CategoriesInfoGrid = ({ data, updateData}) => {
   const [open, setOpen] = useState(false);
   const [newRecord, setNewRecord] = useState({ nameOfCategory: '', icon: null});
 
+  const [modalForEditIsOpen, setModalForEditIsOpen] = useState(false);
+  const [currentRow, setCurrentRow] = useState(null);
+
   useEffect(() => {
     setRows(data);
     // console.log("DATA: ", data)
@@ -87,14 +92,21 @@ const CategoriesInfoGrid = ({ data, updateData}) => {
   const handleSave = async (event) => {
     event.preventDefault();
 
-    const formData = new FormData();
-    formData.append('nameOfCategory', newRecord.nameOfCategory);
-    formData.append('iconId', newRecord.icon.id);
-    formData.append('file', newRecord.icon);
+    // const formData = new FormData();
+    // formData.append('nameOfCategory', newRecord.nameOfCategory);
+    // formData.append('iconId', newRecord.icon.id);
+    // formData.append('imageUrl', imageUrl);
+    const data = {
+      nameOfCategory: newRecord.nameOfCategory,
+      existingImageId: newRecord.icon.id,
+    };
 
-    // addNewCategory(formData).then(data => setRows(data));
     try {
-      await addNewCategory(formData);
+      const { name, url} = await uploadImage(newRecord.icon, 'categories/');
+      data.imageName = name;
+      data.imageUrl = url;
+
+      await addNewCategory(data);
       const updatedData = await updateData();
       setRows(updatedData);
     } catch (error) {
@@ -111,12 +123,22 @@ const CategoriesInfoGrid = ({ data, updateData}) => {
   };
 
   const handleEditClick = (id) => () => { 
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+    const row = rows.find((row) => row.id === id);
+    setCurrentRow(row);
+    setModalForEditIsOpen(true);
+
+    // setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
   const handleDeleteClick = (id) => async() => {
+    const category = rows.find((row) => row.id === id);
+    if (category && category.images && category.images.length > 0) {
+      const image = category.images[0];
+      const imagePath = 'categories/' + image.imgName;
+      await deleteImage(imagePath);
+    }
+
     await deleteCategory(id);
-    
     setRows(rows.filter((row) => row.id !== id));
   };
 
@@ -306,6 +328,15 @@ const CategoriesInfoGrid = ({ data, updateData}) => {
         }}
         onProcessRowUpdateError={handleProcessRowUpdateError}
       />
+
+
+        <EditCategoryPopup 
+          setModalForEditIsOpen={setModalForEditIsOpen}
+          modalForEditIsOpen={modalForEditIsOpen}
+          currentRow={currentRow}
+          updateData={updateData}
+          setRows={setRows}
+        />
 
     </Box>
   );

@@ -29,9 +29,10 @@ export const deleteBrand = async (id) => {
         throw error;
     }
 }
-export const updateBrand = async (data) => {
+export const updateBrand = async (id, data) => {
     try {
-        const response = await $adminHost.put('api/brand/updateBrand/' + data.id, {name: data.name});
+        const response = await $adminHost.put(`api/brand/updateBrand/${id}`, data);
+        
         return response;
     } catch (error) {
         console.error("Error updateBrand: ", error.message);

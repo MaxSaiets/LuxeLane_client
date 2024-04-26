@@ -11,13 +11,9 @@ export const fetchProducts = async () => {
     }
 }
 
-export const addNewProduct = async (formData) => {
+export const addNewProduct = async (data) => {
     try {
-        const response = await $adminHost.post('api/products/addNewProduct', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+        const response = await $adminHost.post('api/products/addNewProduct', data);
 
         return response.data;
     } catch (error) {
@@ -52,7 +48,7 @@ export const deleteProduct = async (id) => {
 export const getProductsIcons = async () => {
     try {
         const response = await $adminHost.get('api/products/getProductsIcons');
-        console.log("GET ICONS", response)
+
         return response;
     } catch (error) {
         console.error("Error getProductsIcons: ", error.message);
