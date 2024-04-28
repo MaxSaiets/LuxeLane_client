@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/LuxeLane_client/static/css/main.3405cc34.css",
-    "main.js": "/LuxeLane_client/static/js/main.2c297550.js",
+    "main.js": "/LuxeLane_client/static/js/main.9a55ac31.js",
     "static/media/4.jpg": "/LuxeLane_client/static/media/4.0cd9b921bf3f603df438.jpg",
     "static/media/1.jpg": "/LuxeLane_client/static/media/1.75f9fc0d35a53c77db20.jpg",
     "static/media/2.jpg": "/LuxeLane_client/static/media/2.63808b448e2931069ecb.jpg",
@@ -12,10 +12,10 @@
     "static/media/slick.woff": "/LuxeLane_client/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/LuxeLane_client/index.html",
     "main.3405cc34.css.map": "/LuxeLane_client/static/css/main.3405cc34.css.map",
-    "main.2c297550.js.map": "/LuxeLane_client/static/js/main.2c297550.js.map"
+    "main.9a55ac31.js.map": "/LuxeLane_client/static/js/main.9a55ac31.js.map"
   },
   "entrypoints": [
     "static/css/main.3405cc34.css",
-    "static/js/main.2c297550.js"
+    "static/js/main.9a55ac31.js"
   ]
 }
