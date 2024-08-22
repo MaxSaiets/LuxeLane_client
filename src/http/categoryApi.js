@@ -10,10 +10,9 @@ export const updateCategory = async (id, data) => {
     }
 }
 
-export const fetchCategories = async () => {
+export const fetchCategoriesData = async () => {
     try {
-        const response = await $host.get('api/categories/categories');
-
+        const response = await $host.get('api/categories/categoriesData');
         return response.data;
     } catch (error) {
         console.error("Error fetching users: ", error);

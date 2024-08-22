@@ -21,7 +21,6 @@ const authInterceptor = config => {
 $authHost.interceptors.request.use(authInterceptor)
 
 
-
 const $adminHost = axios.create({
     baseURL: process.env.REACT_APP_API_URL
 })

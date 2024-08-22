@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { UserStoreContext, InfoUserBlocksStoreContext } from "../../index";
-
+import { RootStoreContext } from '../../store/RootStoreProvider';
 import Box from '@mui/material/Box';
 
 import BlockWelcome from './BlockWelcome/BlockWelcome';
@@ -10,26 +9,61 @@ import CatalogList from '../CatalogList/CatalogList';
 
 import { observer } from 'mobx-react-lite';
 
+import { styled } from '@mui/system';
+
 const LeftBar = observer(() => {
   
-  const user = useContext(UserStoreContext);
-  const infoUserBlocks = useContext(InfoUserBlocksStoreContext);
+  const { userStore, infoUserBlocksStore} = useContext(RootStoreContext);
+
+  const CustomScrollbarBox = styled(Box)({
+    // overflowY: 'scroll',
+    // '&::-webkit-scrollbar': {
+    //   width: '12px',
+    // },
+    // '&::-webkit-scrollbar-track': {
+    //   background: 'transparent',
+    // },
+    // '&::-webkit-scrollbar-thumb': {
+    //   background: '#888',
+    //   borderRadius: '6px',
+    // },
+    // '&::-webkit-scrollbar-thumb:hover': {
+    //   background: '#555',
+    // },
+    overflowY: 'scroll',
+    scrollbarWidth: 'none', /* For Firefox */
+    msOverflowStyle: 'none', /* For Internet Explorer and Edge */
+    '&::-webkit-scrollbar': {
+      width: '0px', /* For Chrome, Safari, and Opera */
+    },
+  });
 
   return (  
-    <Box sx={{display: "flex", width: "100%", height: "100%", paddingTop: "20px", backgroundColor: "primary.main"}}>
-      <Box sx={{display: "flex", flexDirection: "column", gap: "20px", alignSelf: "flex-end", position: "sticky", bottom: "0px"}}>
-
+    <Box sx={{display: "flex", width: "100%", height: "100%", backgroundColor: "primary.main"}}>
+      {/*For flex-end <Box sx={{display: "flex", flexDirection: "column", gap: "20px", alignSelf: "flex-end", position: "sticky", bottom: "0px"}}> */}
+      <CustomScrollbarBox sx={{ 
+        display: "flex", 
+        flexDirection: "column",
+        paddingTop: "20px",
+        gap: "20px", 
+        position: "sticky", 
+        top: "64px", 
+        maxHeight: "100vh", 
+        overflowY: "auto",
+      }}>
         <CatalogList />
 
-        {user.isAuth ? null : <BlockWelcome />}
+        {userStore.isAuth ? null : <BlockWelcome />}
 
         <BlockSocials />
 
-        <BlockInfoSimple blockTitle="Information about the company" data={infoUserBlocks.blockAboutCompanyData} />
+        <BlockInfoSimple blockTitle="Information about the company" data={infoUserBlocksStore.blockAboutCompanyData} />
           
-        <BlockInfoSimple blockTitle="Help" data={infoUserBlocks.blockHelpData} />
+        <BlockInfoSimple blockTitle="Help" data={infoUserBlocksStore.blockHelpData} />
+        <BlockInfoSimple blockTitle="Help" data={infoUserBlocksStore.blockHelpData} />
+        <BlockInfoSimple blockTitle="Help" data={infoUserBlocksStore.blockHelpData} />
         
-      </Box>
+      </CustomScrollbarBox>
     </Box>
   );
 });

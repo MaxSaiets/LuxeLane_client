@@ -19,23 +19,37 @@ export const themeSettings = (mode) => {
                 },
                 text: {
                   main: "#000",
+                  mainPageBlocksTitles: "#000",
                 },
                 cardWrapper: {
                   border: "#a09f9f"
                 },
                 background: {
                   main: "#cecece",
+                  white: "#ffffff",
                   myDrawer: "#a09f9f",
                   btnClose: "grey",
-                }}
+                },
+                cartIcons:{
+                  main: "#30a4c1",
+                  active: "#ff0000"
+                }  
+              }
               : {
                 primary: {
                   main: "#4a4a4a"
                 },
-                text: { 
-                  main: "#fff"
+                leftBar: {
+                  main: "#979595"
                 },
-
+                text: { 
+                  main: "#fff",
+                  mainPageBlocksTitles: "#ffffff",
+                },
+                cartIcons:{
+                  main: "#30a4c1",
+                  active: "#ff0000"
+                } 
             }),
         },
         breakpoints: {
@@ -43,10 +57,12 @@ export const themeSettings = (mode) => {
             xs: 0,
             ssm: 400,
             sm: 600,
+            msm: 800,
             md: 900,
             leftBar: 1100,
             lg: 1200,
             xl: 1536,
+            xxl: 1920,
           },
         },
     }

@@ -18,12 +18,13 @@ import {
 } from '@mui/x-data-grid';
 
 import { addNewType, deleteType, updateType } from '../../../../http/typeApi';
+import { fetchSubCategories } from '../../../../http/subCategoryApi';
 
 import NewTypePopup from './Popups/NewTypePopup';
 import EditTypePopup from './Popups/EditTypePopup';
 
 function EditToolbar(props) {
-  const { setRows, setRowModesModel, rows, updateData, open, handleClose, handleOpen, handleSave, newRecord, setNewRecord } = props;
+  const { setRows, setRowModesModel, rows, updateData, open, handleClose, handleOpen, handleSave, newRecord, setNewRecord, subCategories } = props;
 
   const handleClick = () => {
     handleOpen();
@@ -43,7 +44,8 @@ function EditToolbar(props) {
         handleClose={handleClose} 
         handleSave={handleSave} 
         newRecord={newRecord} 
-        setNewRecord={setNewRecord} 
+        setNewRecord={setNewRecord}
+        subCategories={subCategories}
       />
 
       <Button color="primary" startIcon={<UpdateIcon />} onClick={handleClickUpdateTable}>
@@ -61,7 +63,11 @@ const TypesInfoGrid = ({ data, updateData}) => {
   const [modalForEditIsOpen, setModalForEditIsOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);
 
+  const [subCategories, setSubCategories] = useState([]);
+
   useEffect(() => {
+    fetchSubCategories().then(data => setSubCategories(data));
+
     setRows(data);
   }, [data]);
 
@@ -177,6 +183,14 @@ const TypesInfoGrid = ({ data, updateData}) => {
       },
     },
     {
+      field: 'subCategories',
+      headerName: 'Sub Categories',
+      width: 300,
+      valueGetter: (params) => {
+          return params.row.subCategories.map(sc => sc.name).join(', ');
+      }
+    },
+    {
       field: 'createdAt',
       headerName: 'Created At',
       width: 180,
@@ -277,7 +291,8 @@ const TypesInfoGrid = ({ data, updateData}) => {
             handleSave, 
             newRecord, 
             setNewRecord,
-            handleOpen
+            handleOpen,
+            subCategories,
           },
         }}
         onProcessRowUpdateError={handleProcessRowUpdateError}

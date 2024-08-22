@@ -2,19 +2,19 @@ import React, { useContext, useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { adminRoutes } from "../../routes";
 import { MAIN_ROUTE } from "../../utils/consts";
-import { UserStoreContext } from "../..";
+import { RootStoreContext } from "../../store/RootStoreProvider";
 
 import { CircularProgress, Grid } from "@mui/material";
 
 const AdminRouter = () => {
-    const user = useContext(UserStoreContext)
+    const { userStore } = useContext(RootStoreContext)
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        if(user.isAuth) {
+        if(userStore.isAuth) {
             setIsLoading(false)
         }
-    }, [user.isAuth]);
+    }, [userStore.isAuth]);
 
     if (isLoading) {
 
@@ -28,7 +28,7 @@ const AdminRouter = () => {
     return (
         <Routes> 
             
-            { user.isAuth && user.user.role === "ADMIN" && adminRoutes.map(({path, Component}) => 
+            { userStore.isAuth && userStore.user.role === "ADMIN" && adminRoutes.map(({path, Component}) => 
                 <Route key={path} path={path} element={<Component />} exact/> // exact - означає що путь повинен точно співпадати
             )}
             

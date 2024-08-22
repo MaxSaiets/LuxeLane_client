@@ -7,26 +7,18 @@ import React, { createContext } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import UserStore from './store/UserStore';
+import BasketStore from './store/BasketStore';
 import DeviceStore from './store/DeviceStore';
 import CatalogStore from './store/CatalogStore';
 import InfoUserBlocksStore from './store/InfoUserBlocksStore';
 import './firebase';
 
-export const UserStoreContext = createContext(null);
-export const DeviceStoreContext = createContext(null);
-export const CatalogStoreContext = createContext(null);
-export const InfoUserBlocksStoreContext = createContext(null);
+import RootStoreProvider from './store/RootStoreProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <UserStoreContext.Provider value={new UserStore()}>
-    <DeviceStoreContext.Provider value={new DeviceStore()}>
-      <CatalogStoreContext.Provider value={new CatalogStore()}>
-        <InfoUserBlocksStoreContext.Provider value={new InfoUserBlocksStore()}>
-          <App />
-        </InfoUserBlocksStoreContext.Provider>
-      </CatalogStoreContext.Provider>
-    </DeviceStoreContext.Provider>
-  </UserStoreContext.Provider>
+  <RootStoreProvider>
+    <App />
+  </RootStoreProvider>
 );

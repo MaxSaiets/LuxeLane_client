@@ -1,11 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 
-import { Box, Typography, Grid, MenuItem, Button, Checkbox, FormControlLabel, TextField, Divider } from "@mui/material";
+import { Box, Typography, Grid, MenuItem, Button, Checkbox, FormControlLabel, TextField } from "@mui/material";
 import Slider from '@mui/material/Slider';
-import { set } from "mobx";
 
-const ProductsFilters = observer(({ filters, productsData, setFilters, selectedBrands, setSelectedBrands, priceFilter, setPriceFilter}) => {
+const ProductsFilters = observer(({selectedFilters, handleAddFilterOption, handleDeleteFilterOption, handleAppendFilterOption}) => {
+    const [priceFilter, setPriceFilter] = useState([]);
+
+    useEffect(() => {
+        const { selectedPrice, priceFilter } = selectedFilters;
+        setPriceFilter(selectedPrice && selectedPrice.length > 0 ? selectedPrice[0] : priceFilter ? priceFilter[0] : [0, 0]);
+    }, [selectedFilters]);
 
     const handlePriceChange = (event, newValue) => { 
         setPriceFilter(newValue);
@@ -18,28 +23,17 @@ const ProductsFilters = observer(({ filters, productsData, setFilters, selectedB
         setPriceFilter(newPriceFilter);
     };
 
-    const handlePriceConfirm = useCallback(() => { 
-        const newFilters = { ...filters, price: {between: priceFilter}};
-        setFilters(newFilters);
-    }, [priceFilter, filters]);
+    const handlePriceConfirm = () => {
+        handleAddFilterOption('selectedPrice', priceFilter);
+    };
     
-    const handleBrandChange = useCallback((event) => {
+    const handleBrandChange = (event) => {
         if (event.target.checked) {
-            setSelectedBrands(prevBrands => [...prevBrands, event.target.name]);
+            handleAppendFilterOption('selectedBrands', event.target.name);
         } else {
-            setSelectedBrands(prevBrands => prevBrands.filter(brand => brand !== event.target.name));
+            handleDeleteFilterOption('selectedBrands', event.target.name);
         }
-
-        // const newFilters = { ...filters, selectedBrands };
-        // setFilters(newFilters);
-    }, [setSelectedBrands, selectedBrands, filters]);
-
-    const handleClearFilters = useCallback(() => {
-        const filters = {};
-        setSelectedBrands([]);
-        setPriceFilter([]);
-        setFilters(filters);
-    }, [setFilters]);
+    };
 
     return (
         <Box sx={{ "& > *": { borderBottom: "1px solid #000", padding: "12px"}}}>
@@ -52,7 +46,7 @@ const ProductsFilters = observer(({ filters, productsData, setFilters, selectedB
                         <TextField 
                             variant="outlined" 
                             size="small" 
-                            value={priceFilter[0] || ""} 
+                            value={priceFilter[0] ? priceFilter[0] : ""} 
                             InputProps={{ 
                                 onChange: (e) => handlePriceChangeText(e, 0),
                                 readOnly: false,
@@ -66,7 +60,7 @@ const ProductsFilters = observer(({ filters, productsData, setFilters, selectedB
                         <TextField 
                             variant="outlined" 
                             size="small" 
-                            value={priceFilter[1] || ""} 
+                            value={priceFilter[1] ? priceFilter[1] : ""} 
                             InputProps={{ 
                                 onChange: (e) => handlePriceChangeText(e, 1),
                                 readOnly: false,
@@ -84,11 +78,11 @@ const ProductsFilters = observer(({ filters, productsData, setFilters, selectedB
                 </Box>
 
                 <Slider
-                    value={priceFilter}
+                    value={priceFilter.length === 2 ? priceFilter : [0, 0]}
                     onChange={handlePriceChange}
                     valueLabelDisplay="auto"
-                    min={productsData.minPrice}
-                    max={productsData.maxPrice}  
+                    min={selectedFilters?.priceFilter ? selectedFilters?.priceFilter[0][0] : 0}
+                    max={selectedFilters?.priceFilter ? selectedFilters?.priceFilter[0][1] : 0}
                     sx={{
                         "& .MuiSlider-rail": {
                             bgcolor: 'green',
@@ -102,28 +96,25 @@ const ProductsFilters = observer(({ filters, productsData, setFilters, selectedB
 
             <Box>
                 <Typography>Бренд:</Typography>
+                
                 <Grid container direction="column">
-                    {Object.entries(productsData.brands).map(([brandName, count]) => (
-                        <Grid item key={brandName}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={selectedBrands.includes(brandName)}
-                                        onChange={handleBrandChange}
-                                        name={brandName}
-                                    />
-                                }
-                                label={`${brandName} (${count})`}
-                            />
-                        </Grid>
-                    ))}
+                    {selectedFilters.brands && selectedFilters.brands.map((brand, index) => {
+                        return Object.entries(brand).map(([brandName, count]) => (
+                            <Grid item key={`${index}-${brandName}`}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={selectedFilters?.selectedBrands?.includes(brandName) || false}
+                                            onChange={handleBrandChange}
+                                            name={brandName}
+                                        />
+                                    }
+                                    label={`${brandName} (${count})`}
+                                />
+                            </Grid>
+                        ));
+                    })}
                 </Grid>
-            </Box>
-        
-            <Box>
-                <Button variant="contained" color="primary" onClick={handleClearFilters}>
-                    Clear filters
-                </Button>
             </Box>
         </Box>
     );

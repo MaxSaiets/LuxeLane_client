@@ -98,7 +98,6 @@ const NewProductPopup = ({ open, handleClose, handleSave, newRecord, setNewRecor
   const handleSelectCategories = async (e) => {
     try {
       const response = await getCategoriesNameId();
-      console.log("response.data: ", response.data);
       setData(response.data);
 
       setTypeData("categories");
@@ -123,7 +122,6 @@ const NewProductPopup = ({ open, handleClose, handleSave, newRecord, setNewRecor
   const handleSelectBrands = async (e) => {
     try {
       const response = await fetchBrands();
-      console.log("response.data: ", response.data);
       setData(response);
 
       setTypeData("brands");

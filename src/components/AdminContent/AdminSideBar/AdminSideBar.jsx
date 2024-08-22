@@ -3,7 +3,7 @@ import { Box, Divider, IconButton, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Menu, MenuItem, Sidebar } from 'react-pro-sidebar';
 
-import { UserStoreContext } from "../../../index";
+import { RootStoreContext } from "../../../store/RootStoreProvider";
 
 import { Link as MuiLink } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
@@ -39,7 +39,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 };
 
 const AdminSideBar = () => {
-  const userStore = useContext(UserStoreContext);
+  const {userStore} = useContext(RootStoreContext);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");

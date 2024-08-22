@@ -55,7 +55,7 @@ const IconSelectDialog = ({ open, handleClose, handleIconSelect, handleIconDelet
 };
 
 const NewCategoryPopup = ({ open, handleClose, handleSave, newRecord, setNewRecord }) => {
-    const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
+  const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
   const [iconDialogOpen, setIconDialogOpen] = useState(false);
   const [data, setData] = useState([]);
 

@@ -4,11 +4,10 @@ import { LOGIN_ROUTE, REGISTRATION_ROUTE, MAIN_ROUTE } from "../utils/consts";
 import { useLocation } from "react-router-dom"; // дозволяє отримати маршрут в запросе
 // import { registration, login } from "../http/userApi";
 import { observer } from "mobx-react-lite";
-import { UserStoreContext } from "..";
-
+import { RootStoreContext } from "../store/RootStoreProvider";
 
 const Auth = observer(() => {
-    const user = useContext(UserStoreContext);
+    const {userStore} = useContext(RootStoreContext);
     
     const location = useLocation() // дозволяє отримати маршрут в запросе
     const isLogin = location.pathname === LOGIN_ROUTE

@@ -1,5 +1,15 @@
 import { $adminHost, $host } from "./index";
 
+export const fetchProductData = async (id) => {
+    try {
+        const response = await $host.get('api/products/fetchProductData/' + id);
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching products: ", error);
+        throw error;
+    }
+}
 export const fetchProducts = async () => {
     try {
         const response = await $host.get('api/products/fetchProducts');

@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import GoogleIcon from '@mui/icons-material/Google';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
-import { UserStoreContext } from '../../../index';
+import { RootStoreContext } from "../../../store/RootStoreProvider";
 
 import { handleAuthGoogle, handleAuthGitHub, checkAuth } from '../../../utils/fireBase/authFireBaseService';
 import { getErrorMessageFireBasePopup } from '../../../utils/errors/errorsFirebase';
@@ -21,16 +21,16 @@ const AuthPopup = ({open, setOpen}) => {
     const [logOrReg, setLogOrReg] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
 
-    const user = useContext(UserStoreContext);
+    const {userStore} = useContext(RootStoreContext);
 
     const handleRegisterUserWithEmailAndPass = async (email, password) => {
         try {
-            await checkAuth(user);
+            await checkAuth(userStore);
             
             if (logOrReg) {
-                await user.login(email, password);
+                await userStore.login(email, password);
             } else {
-                await user.registration(email, password);
+                await userStore.registration(email, password);
             }
             handleClose();
         } catch (error) {
@@ -42,11 +42,11 @@ const AuthPopup = ({open, setOpen}) => {
 
     const handleLogRegWithGoogle = async () => {
         try {
-            await checkAuth(user);
+            await checkAuth(userStore);
             const userFireBase = await handleAuthGoogle();
 
             if (userFireBase) {
-                await user.getUserFromDB(userFireBase.email, userFireBase.token, userFireBase.userData);
+                await userStore.getUserFromDB(userFireBase.email, userFireBase.token, userFireBase.userData);
                 handleClose();
             } else {
                 console.log('No user data from Firebase');
@@ -58,11 +58,11 @@ const AuthPopup = ({open, setOpen}) => {
     };
     const handleLogRegWithGitHub = async () => {
         try {
-            await checkAuth(user);
+            await checkAuth(userStore);
             const userFireBase = await handleAuthGitHub();
 
             if (userFireBase) {
-                await user.getUserFromDB(userFireBase.email, userFireBase.uid, userFireBase.userData);
+                await userStore.getUserFromDB(userFireBase.email, userFireBase.uid, userFireBase.userData);
                 handleClose();
             } else {
                 console.log('No user data from Firebase');

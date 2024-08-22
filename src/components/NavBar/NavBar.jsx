@@ -22,15 +22,19 @@ import MyDrawer from './MyDrawer/MyDrawer';
 
 import { useNavigate } from "react-router-dom";
 
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 // color mode
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { ColorModeContext } from '../../theme';
-import { useTheme } from '@emotion/react';
+import { useMediaQuery, useTheme } from '@mui/material';
 
-import { USERPROFILE_ROUTE, MAIN_ROUTE } from '../../utils/consts';
+import { USERPROFILE_ROUTE, MAIN_ROUTE, BASKET_ROUTE, USERFAVORITES_ROUTE } from '../../utils/consts';
 import AuthPopup from '../Popups/AuthPopup/AuthPopup';
-import { UserStoreContext } from '../..';
+import { RootStoreContext } from '../../store/RootStoreProvider';
+
+import { observer } from 'mobx-react-lite';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -58,12 +62,13 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+const StyledInputBase = styled(InputBase, {
+  shouldForwardProp: (prop) => prop !== 'paddingLeft',
+})(({ theme, paddingLeft }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    paddingLeft: paddingLeft || `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
@@ -72,12 +77,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
-  const user = useContext(UserStoreContext);
+
+
+const PrimarySearchAppBar = observer(() => {
+
+  const {userStore, basketStore, favoritesStore} = useContext(RootStoreContext);
   const navigate = useNavigate();
 
   const colorMode = useContext(ColorModeContext);
   const theme = useTheme();
+  const matches600 = useMediaQuery(theme.breakpoints.down('sm'));
+  const matches400 = useMediaQuery(theme.breakpoints.down('ssm'));
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -85,8 +95,24 @@ export default function PrimarySearchAppBar() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
-    if(user.isAuth) {
+    if(userStore.isAuth) {
       navigate(USERPROFILE_ROUTE);
+    } else{
+      setIsAuthPopupOpen(true);
+    }
+  };
+
+  const handleUserFavoritesClick = () => {
+    if(userStore.isAuth) {
+      navigate(USERFAVORITES_ROUTE);
+    } else{
+      setIsAuthPopupOpen(true);
+    }
+  };
+
+  const handleUserBasketClick = () => {
+    if(userStore.isAuth) {
+      navigate(BASKET_ROUTE);
     } else{
       setIsAuthPopupOpen(true);
     }
@@ -123,26 +149,6 @@ export default function PrimarySearchAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -155,6 +161,45 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <p>Profile</p>
       </MenuItem>
+
+      <MenuItem onClick={handleUserBasketClick}>
+        <IconButton
+          size="large"
+          aria-label="show basket"
+          color="inherit"
+        >
+          <Badge badgeContent={basketStore.basketCount} color="error">
+            <ShoppingCartIcon />
+          </Badge>
+        </IconButton>
+        <p>Basket</p>
+      </MenuItem>
+
+      <MenuItem onClick={handleUserFavoritesClick}>
+        <IconButton size="large" aria-label="show favorites" color="inherit">
+          <Badge badgeContent={favoritesStore.favoriteListCount} color="error">
+            <FavoriteIcon />
+          </Badge>
+        </IconButton>
+        <p>Favorites</p>
+      </MenuItem>
+
+      <MenuItem>
+        <IconButton size="large" aria-label="show new mails" color="inherit">
+          <Badge badgeContent={4} color="error">
+            <MailIcon />
+          </Badge>
+        </IconButton> 
+        <p>Messages</p>
+      </MenuItem>
+
+      <MenuItem onClick={colorMode.toggleColorMode}>
+        <IconButton sx={{padding: "12px"}} color="inherit">
+          {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+        </IconButton>
+        <p>Color mode</p>
+      </MenuItem>
+
     </Menu>
   );
 
@@ -167,13 +212,13 @@ export default function PrimarySearchAppBar() {
   return (
     <Box sx={{ zIndex: 1000, position: "sticky", top: 0}}>
       <AppBar position="static" sx={(theme) => ({ backdropFilter: "saturate(180%) blur(20px)", backgroundColor: alpha(theme.palette.primary.main, 0.7) })}>
-        <Toolbar>
+        <Toolbar sx={{ padding: matches400 ? "0px 8px" : undefined, position: "relative"}}>
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            sx={{ mr: 2 }}
+            sx={{ mr: 2, marginRight: "0px" }}
             onClick={toggleDrawer(true)}
           >
             <MenuIcon />
@@ -183,6 +228,8 @@ export default function PrimarySearchAppBar() {
             <MyDrawer toggleDrawer={toggleDrawer}  />
           </Drawer>
           
+          <CatalogMenuModal />
+
           <IconButton 
             disableRipple 
             size="large" 
@@ -193,19 +240,23 @@ export default function PrimarySearchAppBar() {
               variant="h6"
               noWrap
               component="div"
-              sx={{ display: { xs: 'none', sm: 'block' } }}
+              sx={{ display: 'block' }}
             >
               LuxeLane
             </Typography>
           </IconButton>
 
-          <CatalogMenuModal />
-
-          <Search>
-            <SearchIconWrapper>
+          <Search sx={{
+            marginRight: matches600 ? '0px' : undefined,
+            width: matches400 ? '20%' : matches600 ? '30%' : undefined,
+            position: matches600 ? 'absolute' : 'relative',
+            right: matches600 ? '61px' : undefined,
+          }}>
+            <SearchIconWrapper sx={{padding: matches400 ? "0px 8px" : "0px 16px"}}>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              paddingLeft={matches400 ? 'calc(1em + 20px)' : undefined}
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
             />
@@ -214,20 +265,28 @@ export default function PrimarySearchAppBar() {
           <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
 
+              <IconButton sx={{padding: "12px"}} onClick={colorMode.toggleColorMode} color="inherit">
+                {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+              </IconButton>
+
+              <IconButton size="large" aria-label="show favorites" color="inherit" onClick={handleUserFavoritesClick}>
+                <Badge badgeContent={favoritesStore.favoriteListCount} color="error">
+                  <FavoriteIcon />
+                </Badge>
+              </IconButton>
+
               <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                 <Badge badgeContent={4} color="error">
                   <MailIcon />
                 </Badge>
               </IconButton>
-              <IconButton
-                size="large"
-                aria-label="show 17 new notifications"
-                color="inherit"
-              >
-                <Badge badgeContent={17} color="error">
-                  <NotificationsIcon />
+
+              <IconButton size="large" aria-label="show basket" color="inherit" onClick={handleUserBasketClick}>
+                <Badge badgeContent={basketStore.basketCount} color="error">
+                  <ShoppingCartIcon />
                 </Badge>
               </IconButton>
+
               <IconButton
                 size="large"
                 edge="end"
@@ -240,12 +299,8 @@ export default function PrimarySearchAppBar() {
                 <AccountCircle />
               </IconButton>
 
-              <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
-                {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
-              </IconButton>
-
             </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ display: { xs: 'flex', md: 'none' }}}>
             <IconButton
               size="large"
               aria-label="show more"
@@ -264,4 +319,6 @@ export default function PrimarySearchAppBar() {
       <AuthPopup open={isAuthPopupOpen} setOpen={handleAuthPopupClose} /> 
     </Box>
   );
-}
+});
+
+export default PrimarySearchAppBar;

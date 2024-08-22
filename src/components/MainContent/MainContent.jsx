@@ -1,39 +1,24 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { observer } from "mobx-react-lite";
 
-import { Box, useMediaQuery} from "@mui/material";
+import { Box } from "@mui/material";
 
-import SliderSlick from "./Slider/SliderSlick";
-import ContentBlockSimple from "./ContentBlockSimple/ContentBlockSimple";
+import SliderSlick from "../Slider/SliderSlick";
+import ContentBlockSimple from "../ContentBlocks/ContentBlockSimple/ContentBlockSimple";
+import ContentBlockSliderForFavorites from "../ContentBlocks/ContentBlockSliderForFavorites/ContentBlockSliderForFavorites";
 
-import img from "./AdsImg/1.jpg"
-import ContentBlockVideo from "./ContentBlockVideo/ContentBlockVideo";
-import { useMode } from "../../theme";
+import { fetchProductsForAdsBlock } from "../../http/blockAdsApi";
+import ContentBlockSlider from "../ContentBlocks/ContentBlockSlider/ContentBlockSlider";
+
+import ContentBlockVideo from "../ContentBlocks/ContentBlockVideo/ContentBlockVideo";
 
 import LeftBar from "../LeftBar/LeftBar";
 import CatalogList from "../CatalogList/CatalogList";
 
-const data = [
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-];
-const data2 = [
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-    {img: {img}, title: `Ноутбук Apple MacBook Air 15.3" M2 8/512GB`, price: "73 499", discount: "17 699"},
-];
+import { RootStoreContext } from "../../store/RootStoreProvider";
+
+import { useTheme, useMediaQuery } from '@mui/material';
+
 const data3Video = [
     {url: "https://www.youtube.com/watch?v=e7U1YZNgwnY"},
     {url: "https://www.youtube.com/watch?v=mX_8p7NaibQ"},
@@ -41,11 +26,29 @@ const data3Video = [
     {url: "https://www.youtube.com/watch?v=Y1_VsyLAGuk"},
     {url: "https://www.youtube.com/watch?v=tOqmrNvfoHk"},
     {url: "https://www.youtube.com/watch?v=Ij4kCKj-XXI"},
+    {url: "https://www.youtube.com/watch?v=Ij4kCKj-XXI"},
+    {url: "https://www.youtube.com/watch?v=Ij4kCKj-XXI"},
+    {url: "https://www.youtube.com/watch?v=Ij4kCKj-XXI"},
+    {url: "https://www.youtube.com/watch?v=Ij4kCKj-XXI"},
 ];
 
 const MainContent = observer(() => {
-    const [theme, colorMode] = useMode();
+    const theme = useTheme(); 
+    const matches1200 = useMediaQuery(theme.breakpoints.down('lg'));
+    const matches600 = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("leftBar"));
+
+    const { userStore, recentryViewedStore, favoritesStore } = useContext(RootStoreContext);
+
+    const [dataForBlockSlider, setDataForBlockSlider] = useState([]);
+
+    useEffect(() => {
+        if(userStore.isAuth){
+            fetchProductsForAdsBlock({itemsCount: 10, userId: userStore.user.id}).then(data => setDataForBlockSlider(data));
+        } else {
+            fetchProductsForAdsBlock({itemsCount: 10}).then(data => setDataForBlockSlider(data));
+        }
+    }, [userStore.isAuth, userStore.user.id]);
 
     return (
         <Box sx={{width: "100%", height: "auto", display: "flex", flexDirection: "row" }}>
@@ -56,9 +59,12 @@ const MainContent = observer(() => {
             </Box>
             )}
 
-            <Box sx={{ width: isSmallScreen ? "100%" : "calc(100% - 240px)", padding: "30px" }}>
+            <Box sx={{ 
+                width: isSmallScreen ? "100%" : "calc(100% - 240px)",  
+                padding: matches600 ? "0px 8px 0px 8px" : matches1200 ? "10px 20px 0px 20px" : "0px 30px 0px 30px",
+            }}>
 
-                <Box sx={{width: "100%", padding: " 0 30px", margin: "0 auto" }}>
+                <Box sx={{width: "100%", padding: matches600 ? "0px" : matches1200 ? "0px 0px 0px 0px" : "0 0px", margin: "0 auto" }}>
                     <SliderSlick />
                 </Box>
 
@@ -69,43 +75,43 @@ const MainContent = observer(() => {
                 )}
                     
                 <Box sx={{}}>
-                    <ContentBlockSimple itemsCount={5} sectionTitle={"Pеклама"} data={data}  />  
+                    <ContentBlockSlider 
+                        sectionTitle={"Pеклама"} 
+                        data={dataForBlockSlider}  
+                    />  
                 </Box>
 
-                <Box sx={{}}>
-                    <ContentBlockSimple itemsCount={3} sectionTitle={"Pеклама"} data={data2}  />  
-                </Box>
+                {userStore.isAuth && recentryViewedStore.hasRecentlyViewedProducts && (
+                    <Box sx={{}}>
+                        <ContentBlockSlider
+                            sectionTitle={"Переглянуті товари"}
+                            data={recentryViewedStore.recentlyViewedProducts}
+                        />  
+                    </Box>
+                )}
+
+                {userStore.isAuth && favoritesStore.hasUserFavoritesList && (
+                    <Box sx={{}}>
+                        <ContentBlockSliderForFavorites
+                            sectionTitle={"Улюблені"}
+                            data={favoritesStore.userFavoriteList}
+                        />  
+                    </Box>
+                )} 
+                    
+                {/* {userStore.isAuth && recentryViewedStore.hasRecentlyViewedProducts && (
+                    <Box sx={{}}>
+                        <ContentBlockSlider
+                            sectionTitle={"Улюблені"}
+                            data={favoritesStore.userFavoriteList}
+                        />  
+                    </Box>
+                )} */}
 
                 <Box sx={{}}>
-                    <ContentBlockVideo itemsCount={5} sectionTitle={"Нові відео на каналі"} chanelTitle={"LuxeLane"} sectionLink={"https://www.youtube.com"} data={data3Video}  />  
+                    <ContentBlockVideo sectionTitle={"Нові відео на каналі"} chanelTitle={"LuxeLane"} sectionLink={"https://www.youtube.com"} data={data3Video} />  
                 </Box>
 
-                <Box sx={{}}>
-                    <ContentBlockSimple itemsCount={5} sectionTitle={"Pеклама"} data={data}  />  
-                </Box>
-
-                <Box sx={{}}>
-                    <ContentBlockSimple itemsCount={5} sectionTitle={"Pеклама"} data={data}  />  
-                </Box>
-
-                <Box sx={{}}>
-                    <ContentBlockSimple itemsCount={3} sectionTitle={"Pеклама"} data={data2}  />  
-                </Box>
-                <Box sx={{}}>
-                    <ContentBlockSimple itemsCount={3} sectionTitle={"Pеклама"} data={data2}  />  
-                </Box>
-                <Box sx={{}}>
-                    <ContentBlockSimple itemsCount={3} sectionTitle={"Pеклама"} data={data2}  />  
-                </Box>
-                <Box sx={{}}>
-                    <ContentBlockSimple itemsCount={3} sectionTitle={"Pеклама"} data={data2}  />  
-                </Box>
-                <Box sx={{}}>
-                    <ContentBlockSimple itemsCount={3} sectionTitle={"Pеклама"} data={data2}  />  
-                </Box>
-                <Box sx={{}}>
-                    <ContentBlockSimple itemsCount={3} sectionTitle={"Pеклама"} data={data2}  />  
-                </Box>
             </Box>
         </Box>
     );

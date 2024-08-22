@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
-import { UserStoreContext, InfoUserBlocksStoreContext } from "../../../index";
-
+import { RootStoreContext } from '../../../store/RootStoreProvider';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
@@ -24,8 +23,7 @@ import BlockInfoSimpleForDrawer from '../BlockInfoSimpleForDrawer/BlockInfoSimpl
 
 
 const MyDrawer = ({toggleDrawer}) => {
-  const user = useContext(UserStoreContext);
-  const infoUserBlocks = useContext(InfoUserBlocksStoreContext);
+  const { userStore, infoUserBlocksStore} = useContext(RootStoreContext);
 
   return (
     <Box sx={{ width: 250, overflowY: "scroll", "&::-webkit-scrollbar": {width: 0} }} role="presentation" >
@@ -44,17 +42,17 @@ const MyDrawer = ({toggleDrawer}) => {
           </IconButton>
         </Box>
 
-        {user.isAuth ? null : <BlockWelcome />}
+        {userStore.isAuth ? null : <BlockWelcome />}
 
       </Box>
       <Box sx={{display: "flex", flexDirection: "column", gap: "10px", paddingY: "20px"}}>
 
         <Box>
-          <BlockInfoSimpleForDrawer blockTitle="Information about the company" data={infoUserBlocks.blockAboutCompanyData} toggleDrawer={toggleDrawer} />
-          <BlockInfoSimpleForDrawer blockTitle="Help" data={infoUserBlocks.blockHelpData} toggleDrawer={toggleDrawer} />
+          <BlockInfoSimpleForDrawer blockTitle="Information about the company" data={infoUserBlocksStore.blockAboutCompanyData} toggleDrawer={toggleDrawer} />
+          <BlockInfoSimpleForDrawer blockTitle="Help" data={infoUserBlocksStore.blockHelpData} toggleDrawer={toggleDrawer} />
 
-          <BlockInfoSimpleForDrawer blockTitle="Information about the company" data={infoUserBlocks.blockAboutCompanyData} useAccordion={true} toggleDrawer={toggleDrawer} />
-          <BlockInfoSimpleForDrawer blockTitle="Help" data={infoUserBlocks.blockHelpData} useAccordion={true} toggleDrawer={toggleDrawer} />
+          <BlockInfoSimpleForDrawer blockTitle="Information about the company" data={infoUserBlocksStore.blockAboutCompanyData} useAccordion={true} toggleDrawer={toggleDrawer} />
+          <BlockInfoSimpleForDrawer blockTitle="Help" data={infoUserBlocksStore.blockHelpData} useAccordion={true} toggleDrawer={toggleDrawer} />
         </Box>
 
         <BlockSocials />

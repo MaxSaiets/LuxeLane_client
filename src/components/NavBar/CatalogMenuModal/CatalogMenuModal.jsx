@@ -1,12 +1,10 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import CatalogList from "../../CatalogList/CatalogList";
-import { useMode } from "../../../theme";
-import { useMediaQuery } from "@mui/material";
 import SubCatalogList from "../../CatalogList/SubCatalogList/SubCatalogList";
+import { useTheme, useMediaQuery } from "@mui/material";
 
 import { Grid } from '@mui/material';
 
@@ -19,25 +17,27 @@ const style = {
   height: "auto",
   bgcolor: 'background.paper',
   boxShadow: 24,
-//   p: 1,
   zIndex: 9999,
 };
 
 const CatalogMenuModal = () => {
+    const theme = useTheme();
+    const matches600 = useMediaQuery(theme.breakpoints.down('sm'));
+    const matches400 = useMediaQuery(theme.breakpoints.down('400'));
+
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
         
-    const [theme] = useMode();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("leftBar"));
 
     const [selectedCategoryForSubCategories, setSelectedCategoryForSubCategories] = useState();
     
     return (
 
-        <Box sx={{padding: "15px"}}>
-            <Button onClick={open ? handleClose : handleOpen} variant="contained" sx={{color: "text.black"}}>Catalog</Button>
-
+        <Box sx={{padding: matches600 ? "0px" : "15px"}}>
+            <Button onClick={open ? handleClose : handleOpen} variant="contained" sx={{ padding: matches400 ? "6px 10px" : undefined, color: "text.black"}}>Catalog</Button>
+ 
             <Modal
                 open={open}
                 onClose={handleClose}

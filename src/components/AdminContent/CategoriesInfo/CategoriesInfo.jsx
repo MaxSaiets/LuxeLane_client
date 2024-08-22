@@ -5,7 +5,7 @@ import AllUsersInfoGrid from '../Grid/AllUsersInfoGrid/AllUsersInfoGrid';
 import ColumnChart from '../Charts/ColumnChart/ColumnChart';
 import { Grid } from '@mui/material';
 
-import { fetchCategories } from '../../../http/categoryApi';
+import { fetchCategoriesData } from '../../../http/categoryApi';
 import { fetchSubCategories } from '../../../http/subCategoryApi';
 
 import CategoriesInfoGrid from '../Grid/CategoriesInfoGrid/CategoriesInfoGrid';
@@ -17,7 +17,7 @@ const CategoriesInfo = () => {
 
   useEffect(() => {
     // Categories
-    fetchCategories().then(data => setDataCategories(data));
+    fetchCategoriesData().then(data => setDataCategories(data));
 
     // Subcategories
     fetchSubCategories().then(data => setDataSubCategories(data));
@@ -27,7 +27,7 @@ const CategoriesInfo = () => {
     <Grid container spacing={5}>
       <Grid item xs={12} sx={{marginTop: 2}}>
         CATEGORIES
-        <CategoriesInfoGrid data={dataCategories} updateData={fetchCategories} />
+        <CategoriesInfoGrid data={dataCategories} updateData={fetchCategoriesData} />
       </Grid>
 
       <Grid item xs={12}>

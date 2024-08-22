@@ -1,9 +1,10 @@
 // всі маршрути до конктретних сторінок на сайті
 
 import Basket from "./pages/Basket"
+import UserFavorites from "./pages/UserFavorites"
 import Main from "./pages/Main"
 import Auth from "./pages/Auth"
-import DevicePage from "./pages/DevicePage"
+import DevicePage from "./pages/UserFavorites"
 import UserProfile from "./pages/UserProfile"
 
 import AdminPanel from "./pages/AdminPanel"
@@ -19,6 +20,8 @@ import TypesInfo from "./components/AdminContent/TypesInfo/TypesInfo"
 import CategoryExplorer from "./pages/CategoryExplorer"
 import ProductsListPage from "./pages/ProductsListPage"
 
+import ProductPage from "./pages/ProductPage"
+
 import Page404 from "./pages/Page404"
 
 
@@ -27,6 +30,7 @@ import {
     ADMIN_MAIN_ROUTE,
     ADMIN_ALLUSERS_ROUTE,
     BASKET_ROUTE,
+    USERFAVORITES_ROUTE,
     DEVICE_ROUTE,
     LOGIN_ROUTE,
     REGISTRATION_ROUTE,
@@ -39,12 +43,17 @@ import {
     CATEGORYEXPLORER_ROUTE,
     PAGE404_ROUTE,
     PRODUCTSLISTPAGE_ROUTE,
+    PRODUCT_ROUTE,
 } from "./utils/consts"
 
 export const authRoutes = [ // маршрути до яких має доступ авторизований користувач
     {
         path: BASKET_ROUTE,
         Component: Basket
+    },
+    {
+        path: USERFAVORITES_ROUTE,
+        Component: UserFavorites
     },
     {
         path: USERPROFILE_ROUTE,
@@ -75,6 +84,10 @@ export const publicRoutes = [ // бублічні маршрути
     {
         path: PRODUCTSLISTPAGE_ROUTE(':name'),
         Component: ProductsListPage
+    },
+    {
+        path: PRODUCT_ROUTE(':id'),
+        Component: ProductPage
     },
     {
         path: PAGE404_ROUTE,

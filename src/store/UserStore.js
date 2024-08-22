@@ -71,7 +71,7 @@ export default class UserStore {
         try {
             const response = await getOrsaveUserInDatabase(email, token, userData);
 
-            this.setUser( response.user);
+            this.setUser(response.user);
             this.setIsAuth(true);
         } catch (error){
             throw error

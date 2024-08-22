@@ -12,9 +12,12 @@ export const fetchTypes = async () => {
 }
 export const addNewType = async (data) => {
     try {
-        const response = await $adminHost.post('api/type/addNewType', {name: data.name});
+        const response = await $adminHost.post('api/type/addNewType', {
+            name: data.name,
+            subCategories: data.subCategories || []
+        });
+        
         return response;
-
     } catch (error) {
         console.error("Error addNewType: ", error.message);
         throw error;
@@ -31,8 +34,11 @@ export const deleteType = async (id) => {
 }
 export const updateType = async (id, data) => {
     try {
-        const response = await $adminHost.put(`api/type/updateType/${id}`, data);
-        
+        const response = await $adminHost.put(`api/type/updateType/${id}`, {
+            name: data.name,
+            subCategories: data.subCategories || []
+        });
+
         return response;
     } catch (error) {
         console.error("Error updateType: ", error.message);

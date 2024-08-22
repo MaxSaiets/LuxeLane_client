@@ -1,17 +1,17 @@
 import { makeAutoObservable, toJS } from "mobx";
-import { fetchCategories } from "../http/categoryApi";
+import { fetchCategoriesData } from "../http/categoryApi";
 import { fetchSubCategories } from "../http/subCategoryApi";
 
 export default class CatalogStore {
     constructor(){
-        this._catalogСategories = []
+        this._catalogСategoriesData = []
         this._catalogSubСategories = []
 
         makeAutoObservable(this)
     }
-
+ 
     setCatalogСategories(catalogСategories){ 
-        this._catalogСategories = catalogСategories; 
+        this._catalogСategoriesData = catalogСategories; 
     }
 
     setCatalogSubСategories(catalogSubСategories){ 
@@ -19,16 +19,16 @@ export default class CatalogStore {
     }
 
     get catalogСategories(){
-        return this._catalogСategories;
+        return this._catalogСategoriesData;
     }
 
     get catalogSubСategories(){
         return this._catalogSubСategories;
     }
 
-    async getCatalogCategories(){
+    async getCatalogCategoriesData(){
         try {
-            const response = await fetchCategories();
+            const response = await fetchCategoriesData();
 
             this.setCatalogСategories(response);
         } catch (error){
@@ -47,16 +47,16 @@ export default class CatalogStore {
     } 
     
     async checkCategoryExists(categoryName){
-        return this._catalogСategories.some(category => category.name === categoryName);
+        return this._catalogСategoriesData.some(category => category.name === categoryName);
     }
 
     async getSubCategoriesForCategory(categoryName) {
-        const category = this._catalogСategories.find(category => category.name === categoryName);
+        const category = this._catalogСategoriesData.find(category => category.name === categoryName);
         return category ? toJS(this._catalogSubСategories.filter(subCategory => subCategory.categoryId === category.id)) : [];
     }
 
     async getCategoryDataByName(categoryName) {
-        const category = this._catalogСategories.find(category => category.name === categoryName);
+        const category = this._catalogСategoriesData.find(category => category.name === categoryName);
         return category;
     }
 }

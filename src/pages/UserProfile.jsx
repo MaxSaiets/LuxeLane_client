@@ -1,10 +1,7 @@
 import React, {useContext, useState} from "react";
-import { UserStoreContext } from "../index";
-
-import { Link } from "react-router-dom";
+import { RootStoreContext } from "../store/RootStoreProvider";
 import { ADMIN_ROUTE, MAIN_ROUTE } from "../utils/consts";
 
-import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { Box, Divider, IconButton, Typography } from "@mui/material";
@@ -29,21 +26,21 @@ import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 
 const Item = ({ title, to, icon, selected, setSelected, buttonLog = false, handleButtonLog }) => {
 
-    return (
-        <MuiLink component={RouterLink} underline='none' color="#000000" to={to}>
-            <MenuItem
-                active={selected === title}
-                onClick={buttonLog ? handleButtonLog : () => setSelected(title)}
-                icon={icon}
-            >
-                <Typography>{title}</Typography>
-            </MenuItem>
-        </MuiLink>
-    );
+  return (
+    <MuiLink component={RouterLink} underline='none' color="#000000" to={to}>
+      <MenuItem
+        active={selected === title}
+        onClick={buttonLog ? handleButtonLog : () => setSelected(title)}
+        icon={icon}
+      >
+        <Typography>{title}</Typography>
+      </MenuItem>
+    </MuiLink>
+  );
 };
 
-const UserProfile = () => {
-    const userStore = useContext(UserStoreContext);
+const UserProfile = () => { 
+    const {userStore} = useContext(RootStoreContext);
     const navigate = useNavigate();
 
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -51,9 +48,9 @@ const UserProfile = () => {
   
     const handleLogout = async () => {
         try {
-            await userStore.logout();
+          await userStore.logout();
 
-            navigate(MAIN_ROUTE);
+          navigate(MAIN_ROUTE);
         } catch (error) {
             console.error("Failed to log out", error);
         }

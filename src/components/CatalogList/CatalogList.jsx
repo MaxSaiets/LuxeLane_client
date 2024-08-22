@@ -1,65 +1,77 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { CatalogStoreContext } from "../../index";
-
+import { RootStoreContext } from '../../store/RootStoreProvider';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
-import { Grid, useMediaQuery } from '@mui/material';
+import { Grid } from '@mui/material';
 import { useMode } from '../../theme';
 
 import { Link as MuiLink } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 import { CATEGORYEXPLORER_ROUTE } from '../../utils/consts';
+import { observer } from 'mobx-react-lite';
 
-const CatalogList = ({setSelectedCategoryForSubCategories = () => {}, isInMenu = false}) => {
-    const catalog = useContext(CatalogStoreContext);
-    const [theme] = useMode();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down("leftBar"));
+import { useMediaQuery, useTheme } from '@mui/material';
+
+const CatalogList = observer(({setSelectedCategoryForSubCategories = () => {}, isInMenu = false}) => {
+    const {catalogStore} = useContext(RootStoreContext);
+    const theme = useTheme();
+    const matches600 = useMediaQuery(theme.breakpoints.down("sm"));
+    const matches400 = useMediaQuery(theme.breakpoints.down("ssm"));
+    const matches1100 = useMediaQuery(theme.breakpoints.down("leftBar"));
 
     const [selectedCategory, setSelectedCategory] = useState();
 
     useEffect(() => {
-        setSelectedCategory(catalog.catalogСategories[0]?.name);
-        setSelectedCategoryForSubCategories(catalog.catalogСategories[0]?.name);
-    }, [catalog.catalogCategories])
+        setSelectedCategory(catalogStore.catalogСategories[0].categoryName);
+        setSelectedCategoryForSubCategories(catalogStore.catalogСategories[0].categoryName);
+    }, [catalogStore.catalogCategories])
 
     const handleCategoryClick = (category) => {
         
     }
+
     const handleCategoryHover = (item) => {
-        setSelectedCategoryForSubCategories(item.name);
-        setSelectedCategory(item.name);
+        setSelectedCategoryForSubCategories(item.categoryName);
+        setSelectedCategory(item.categoryName);
     }
 
     return (
-        <Grid container>
-            {catalog.catalogСategories.map((item, index) => (
+        <Grid container sx={{marginTop: matches1100 ? "15px" : "0px"}}>
+            {catalogStore.catalogСategories.map((item, index) => (
                 <Grid 
                     item 
-                    xs={12} 
-                    sm={isSmallScreen ? 6 : 12} 
-                    md={isSmallScreen ? 4 : 12} 
-                    lg={isSmallScreen ? 3 : 12} 
                     key={index}
+                    xs={6} 
+                    ssm={6} 
+                    sm={6} 
+                    msm={6} 
+                    md={3}
+                    leftBar={12}
+                    lg={12} 
+                    xl={12} 
+                    xxl={12}
+                    sx={{marginTop: matches400 ? "0px" : matches1100 ? "5px" : "0px"}}
                 >
-                    <MuiLink component={RouterLink} underline='none' color="#000000" to={CATEGORYEXPLORER_ROUTE(encodeURIComponent(item.name.replace(/[\s,]/g, '_')))}>
+                    <MuiLink component={RouterLink} underline='none' color="#000000" to={CATEGORYEXPLORER_ROUTE(encodeURIComponent(item.categoryName.replace(/[\s,]/g, '_')))}>
                         <ListItemButton 
                             sx={{ 
                                 py: 0,
                                 minHeight: 32,
-                                backgroundColor: isInMenu && item.name === selectedCategory ? 'gray' : 'transparent' 
+                                backgroundColor: isInMenu && item.categoryName === selectedCategory ? 'gray' : 'transparent',
+                                padding: matches600 ? '0 8px' : '0 16px',
                             }}
                             onMouseOver={() => handleCategoryHover(item)}
                         >
-                            <ListItemIcon sx={{ width: 28, height: 28, marginRight: "-8px" }}>
-                                <img src={item.images[0]?.imgSrc} alt="" />
+                            <ListItemIcon sx={{ width: 28, height: 28, marginRight: "-15px" }}>
+                                <img style={{maxWidth: "35px", objectFit: "contain"}} src={item.categoryImage} alt={item.categoryName}  />
                             </ListItemIcon>
                             
                             <ListItemText
-                                primary={item.name}
-                                primaryTypographyProps={{ fontSize: 14, fontWeight: 'medium' }}
+                                primary={item.categoryName}
+                                primaryTypographyProps={{ fontSize: matches400 ? 8 : matches600 ? 12 : 14, fontWeight: 'medium' }}
                             />
                         </ListItemButton>
                     </MuiLink>
@@ -67,6 +79,6 @@ const CatalogList = ({setSelectedCategoryForSubCategories = () => {}, isInMenu =
             ))}
         </Grid>
     );
-}
+});
 
 export default CatalogList;

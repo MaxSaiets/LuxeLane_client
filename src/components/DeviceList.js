@@ -1,14 +1,14 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
 import DeviceItem from "./DeviceItem";
-import { DeviceStoreContext } from "..";
+import { RootStoreContext } from "../store/RootStoreProvider";
 
 const DeviceList = observer(() => {
-    const device = useContext(DeviceStoreContext)
+    const {deviceStore} = useContext(RootStoreContext)
 
     return (
         <>
-            {device.devices.map(device => 
+            {deviceStore.devices.map(device => 
                 <DeviceItem key={device.id} device={device} />
             )}
         </>
