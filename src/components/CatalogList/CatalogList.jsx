@@ -24,10 +24,10 @@ const CatalogList = observer(({setSelectedCategoryForSubCategories = () => {}, i
 
     const [selectedCategory, setSelectedCategory] = useState();
 
-    useEffect(() => {
-        setSelectedCategory(catalogStore.catalogСategories[0].categoryName);
-        setSelectedCategoryForSubCategories(catalogStore.catalogСategories[0].categoryName);
-    }, [catalogStore.catalogCategories])
+    // useEffect(() => {
+    //     setSelectedCategory(catalogStore.catalogСategories[0].categoryName);
+    //     setSelectedCategoryForSubCategories(catalogStore.catalogСategories[0].categoryName);
+    // }, [catalogStore.catalogCategories])
 
     const handleCategoryClick = (category) => {
         

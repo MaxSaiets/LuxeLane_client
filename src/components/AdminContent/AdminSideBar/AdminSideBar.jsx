@@ -38,10 +38,10 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
     );
 };
 
-const AdminSideBar = () => {
+const AdminSideBar = ({ isCollapsed, setIsCollapsed }) => {
   const {userStore} = useContext(RootStoreContext);
 
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  // const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
 
   return (

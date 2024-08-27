@@ -22,15 +22,16 @@ const ProductPage = () => {
     const [productData, setProductData] = useState(null);
     const [hoveredOnImg, setHoveredOnImg] = useState(false);
     const [hoveredOnArrow, setHoveredOnArrow] = useState(false);
-
+    console.log("DSFSD", id)
     useEffect(() => {
-        if(userStore.isAuth){
-            recentryViewedStore.addRecentlyViewedProduct({productId: id, userId: userStore.user.id});
-        }
+        // if(userStore.isAuth){
+        //     recentryViewedStore.addRecentlyViewedProduct({productId: id, userId: userStore.user.id});
+        // }
 
         fetchProductData(id).then(data => {
             console.log("Product DATA: ", data);
-            setProductData(data)});
+            setProductData(data)
+        });
     }, [id]);
     
     if (!productData) {
@@ -176,7 +177,7 @@ const ProductPage = () => {
                                                     height: 2100 //1800
                                                 },
                                                 lensStyle: { backgroundColor: 'rgba(0,0,0,.6)' },
-                                                enlargedImagePortalId: 'portal',
+                                                // enlargedImagePortalId: 'portal',
                                                 enlargedImageContainerDimensions: {
                                                     width: '100%',
                                                     height: '100%'
@@ -216,6 +217,12 @@ const ProductPage = () => {
                     padding: "24px 24px 0 15px", 
                     position: "relative",
                 }}>
+                    {/* For big img when user is zooming */}
+                    <div
+                        id="portal"
+                        style={{ position: 'absolute', top: "16px", left: "16px", zIndex: 100 }}
+                        className="portal"
+                    />  
                     <Typography variant="h5" component="div" gutterBottom>
                         {productData.title}
                     </Typography>

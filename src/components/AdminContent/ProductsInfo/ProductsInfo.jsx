@@ -18,7 +18,7 @@ const ProductsInfo = () => {
   }, []);
 
   return (
-    <Grid container spacing={5} >
+    <Grid container spacing={5}>
       <Grid item xs={12} sx={{marginTop: 2}}>
         PRODUCTS
         <ProductsInfoGrid data={dataProducts} updateData={fetchProducts} />

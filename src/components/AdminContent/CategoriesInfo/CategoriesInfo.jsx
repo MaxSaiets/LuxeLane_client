@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import AllUsersInfoGrid from '../Grid/AllUsersInfoGrid/AllUsersInfoGrid';
-import ColumnChart from '../Charts/ColumnChart/ColumnChart';
 import { Grid } from '@mui/material';
 
 import { fetchCategoriesData } from '../../../http/categoryApi';
@@ -15,24 +13,33 @@ const CategoriesInfo = () => {
   const [dataCategories, setDataCategories] = useState([]);
   const [dataSubCategories, setDataSubCategories] = useState([]);
 
-  useEffect(() => {
-    // Categories
-    fetchCategoriesData().then(data => setDataCategories(data));
+  const loadCategoriesData = async () => {
+    const categoriesData = await fetchCategoriesData();
+    // setDataCategories(categoriesData);
+    console.log(categoriesData);
+    return categoriesData;
+  };
 
-    // Subcategories
-    fetchSubCategories().then(data => setDataSubCategories(data));
+  const loadSubCategoriesData = async () => {
+    const subCategoriesData = await fetchSubCategories();
+    setDataSubCategories(subCategoriesData);
+  };
+
+  useEffect(() => {
+    loadCategoriesData();
+    loadSubCategoriesData();
   }, []);
 
   return (
     <Grid container spacing={5}>
-      <Grid item xs={12} sx={{marginTop: 2}}>
+      <Grid item xs={12} sx={{ marginTop: 2 }}>
         CATEGORIES
-        <CategoriesInfoGrid data={dataCategories} updateData={fetchCategoriesData} />
+        <CategoriesInfoGrid data={dataCategories} updateData={loadCategoriesData} />
       </Grid>
 
       <Grid item xs={12}>
         SUBCATEGORIES
-        <SubCategoriesInfoGrid data={dataSubCategories} updateData={fetchSubCategories} />
+        <SubCategoriesInfoGrid data={dataSubCategories} updateData={loadSubCategoriesData} />
       </Grid>
     </Grid>
   );
