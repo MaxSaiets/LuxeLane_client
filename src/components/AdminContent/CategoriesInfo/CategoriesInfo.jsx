@@ -16,13 +16,13 @@ const CategoriesInfo = () => {
   const loadCategoriesData = async () => {
     const categoriesData = await fetchCategoriesData();
     // setDataCategories(categoriesData);
-    console.log(categoriesData);
     return categoriesData;
   };
 
   const loadSubCategoriesData = async () => {
     const subCategoriesData = await fetchSubCategories();
-    setDataSubCategories(subCategoriesData);
+    // setDataSubCategories(subCategoriesData);
+    return subCategoriesData;
   };
 
   useEffect(() => {

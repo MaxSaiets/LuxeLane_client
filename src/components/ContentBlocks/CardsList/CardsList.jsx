@@ -1,11 +1,17 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Box, Button } from "@mui/material";
 import CardWrapperSimle from "../CardWrapperSimple/CardWrapperSimple";
 
 import { useTheme, useMediaQuery } from '@mui/material';
 
+import { USERFAVORITES_ROUTE } from "../../../utils/consts";
+import { useNavigate } from "react-router-dom";
+
+
 const CardsList = ({itemsCount, data, showAllItems = false}) => {
+    const navigate = useNavigate();
     const [showItems, setShowAllItems] = useState(showAllItems);
+
     const theme = useTheme(); 
     
     const matches1920 = useMediaQuery(theme.breakpoints.down('xxl'));
@@ -15,44 +21,72 @@ const CardsList = ({itemsCount, data, showAllItems = false}) => {
     const matches800 = useMediaQuery(theme.breakpoints.down('msm'));
     const matches600 = useMediaQuery(theme.breakpoints.down('sm'));
     const matches400 = useMediaQuery(theme.breakpoints.down('ssm'));
+    const matches450 = useMediaQuery(theme.breakpoints.down('ssmm'));
     
     if (matches600) {
       itemsCount = 2;
     } else if (matches800) {
-      itemsCount = 3;
+      itemsCount = 4;
     } else if (matches900) {
       itemsCount = 4;
     } else if (matches1200) {
       itemsCount = 5;
     } else if (matches1536) {
-      itemsCount = 6;
+      itemsCount = 5;
     } else if (matches1920) {
-      itemsCount = 7;
+      itemsCount = 6;
     }
-    const visibleItems = showItems ? data : data.slice(0, itemsCount)
+
+    const [visibleItemCount, setVisibleItemCount] = useState(itemsCount);
+
+
+    const visibleItems = showItems ? data : data.slice(0, visibleItemCount)
 
     const itemValue = (100 - 4) / itemsCount;
     const itemWidth = `${itemValue}%`;
     const gapItemsPreValue = `calc(4% / ${itemsCount})`;
     const gapItemsValue = `calc((4% + ${gapItemsPreValue}) / ${itemsCount})`;
 
+    const handleUserFavoritesClick = () => {
+      navigate(USERFAVORITES_ROUTE);
+    };
+
+    const handleShowMoreClick = () => {
+      setVisibleItemCount(prevCount => prevCount + itemsCount);
+    };
+
     return (
-        <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", rowGap: "10px", width: "100%", marginBottom: showAllItems ? "0px" : "20px" }}>
+        <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", rowGap: "10px", width: "100%"}}>
           {visibleItems.map((item, index) => (
             <Box key={index} sx={{ flex: `0 0 ${itemWidth}`, boxSizing: "border-box", marginRight: index % itemsCount === itemsCount - 1 ? "0px" : gapItemsValue }}>
                 <CardWrapperSimle product={item} />
             </Box>
           ))}
-          {!showAllItems && data.length > itemsCount && (
-            <Button
-              variant="outlined"
-              color="info"
-              sx={{ position: "absolute", width: matches600 ? "100%" : undefined, bottom: "-15px", right: "0px" }}
-              onClick={() => setShowAllItems(true)}
-              size="small"
-            >
-              Показати всі продукти
-            </Button>
+
+          {!showAllItems && (
+            <Box sx={{ width: "100%", justifyContent: "right", display: "flex", flexDirection: matches450 ? "column" : "row", gap: "10px" }}>
+              <Button
+                variant="outlined"
+                color="info"
+                onClick={handleUserFavoritesClick}
+                size="small"
+                sx={{ width: matches450 ? "100%" : matches600 ? "50%" : "auto" }}
+              >
+                Показати всі продукти
+              </Button>
+
+              {!showItems && data.length > visibleItemCount && (
+                <Button
+                  variant="outlined"
+                  color="info"
+                  onClick={handleShowMoreClick}
+                  size="small"
+                  sx={{ width: matches450 ? "100%" : matches600 ? "50%" : "auto" }}
+                >
+                  Показати більше продуктів
+                </Button>
+              )}
+            </Box>
           )}
         </Box>
       );

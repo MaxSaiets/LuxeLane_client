@@ -31,6 +31,8 @@ const CardsListForSlide = ({carouserSettings, data}) => {
         ...carouserSettings,
         dots: false,
         speed: 500,
+        infinite: true,
+        swipeToSlide: true,
         nextArrow: <SampleNextArrow />,
         prevArrow: <SamplePrevArrow />,
         customPaging: function (i) {

@@ -80,12 +80,12 @@
 
     const handleSave = async (event) => {
       event.preventDefault();
-      const { name, url } = await uploadImage(newRecord.icon, 'categories/');
+      const result = await uploadImage(newRecord.icon, 'categoryImg');
       const newCategoryData = {
         nameOfCategory: newRecord.nameOfCategory,
         existingImageId: newRecord.icon.id,
-        imageName: name,
-        imageUrl: url
+        imageName: result[0].name,
+        imageUrl: result[0].url
       };
 
       try {
@@ -309,35 +309,38 @@
           '& .textPrimary': {
             color: 'text.primary',
           },
-        }}
-      >
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          editMode="row"
-          rowModesModel={rowModesModel}
-          onRowModesModelChange={handleRowModesModelChange}
-          onRowEditStop={handleRowEditStop}
-          processRowUpdate={processRowUpdate}
-          slots={{
-            toolbar: EditToolbar,
-          }}
-          slotProps={{
-            toolbar: { 
-              setRows, 
-              setRowModesModel, 
-              rows, 
-              updateData, 
-              open, 
-              handleClose, 
-              handleSave, 
-              newRecord, 
-              setNewRecord,
-              handleOpen
-            },
-          }}
-          onProcessRowUpdateError={handleProcessRowUpdateError}
-        />
+        }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            editMode="row"
+            rowModesModel={rowModesModel}
+            onRowModesModelChange={handleRowModesModelChange}
+            onRowEditStop={handleRowEditStop}
+            processRowUpdate={processRowUpdate}
+            slots={{
+              toolbar: EditToolbar,
+            }}
+            slotProps={{
+              toolbar: { 
+                setRows, 
+                setRowModesModel, 
+                rows, 
+                updateData, 
+                open, 
+                handleClose, 
+                handleSave, 
+                newRecord, 
+                setNewRecord,
+                handleOpen
+              },
+            }}
+            onProcessRowUpdateError={handleProcessRowUpdateError}
+          />
+        {/* {rows.length > 0 ? (
+          ) : (
+            <div>Loading...</div>
+        )} */}
 
           <EditCategoryPopup 
             setModalForEditIsOpen={setModalForEditIsOpen}

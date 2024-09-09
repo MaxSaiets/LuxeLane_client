@@ -8,7 +8,7 @@ import { PRODUCTSLISTPAGE_ROUTE } from "../../../utils/consts";
 import { Link as MuiLink } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
-const SubCatalogList = ({ category }) => {
+const SubCatalogList = ({ category, closeModal }) => {
     const { catalogStore } = useContext(RootStoreContext);
 
     const generateCategoryExplorerRoute = (name) => {
@@ -31,6 +31,7 @@ const SubCatalogList = ({ category }) => {
                                         color="text.main"
                                         sx={{ cursor: "pointer" }}
                                         to={generateCategoryExplorerRoute(subItem.subCategoryName)}
+                                        onClick={closeModal}
                                     >
                                         <Typography sx={{ fontSize: "16px" }}>
                                             {subItem.subCategoryName}
@@ -45,6 +46,7 @@ const SubCatalogList = ({ category }) => {
                                             key={typeIndex}
                                             sx={{ cursor: "pointer", marginLeft: "8px" }}
                                             to={generateCategoryExplorerRoute(type.typeName)}
+                                            onClick={closeModal}
                                         >
                                             <Typography sx={{ fontSize: "14px" }}>
                                                 {type.typeName}

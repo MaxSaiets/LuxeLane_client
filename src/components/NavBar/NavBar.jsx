@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,7 +14,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import CatalogMenuModal from './CatalogMenuModal/CatalogMenuModal';
+import HomeIcon from '@mui/icons-material/Home';
+import CategoryIcon from '@mui/icons-material/Category'; 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 
@@ -36,6 +37,10 @@ import { RootStoreContext } from '../../store/RootStoreProvider';
 
 import { observer } from 'mobx-react-lite';
 
+import MobileBottomMenu from './MobileBottomMenu/MobileBottomMenu';
+
+import CatalogMenuModalButton from './CatalogMenuModal/CatalogMenuModalButton';
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -47,8 +52,8 @@ const Search = styled('div')(({ theme }) => ({
   marginLeft: 0,
   width: '100%',
   [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
+    // marginLeft: theme.spacing(3),
+    // width: 'auto',
   },
 }));
 
@@ -64,7 +69,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 
 const StyledInputBase = styled(InputBase, {
   shouldForwardProp: (prop) => prop !== 'paddingLeft',
-})(({ theme, paddingLeft }) => ({
+  })(({ theme, paddingLeft }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
@@ -76,8 +81,6 @@ const StyledInputBase = styled(InputBase, {
     },
   },
 }));
-
-
 
 const PrimarySearchAppBar = observer(() => {
 
@@ -93,6 +96,12 @@ const PrimarySearchAppBar = observer(() => {
 
   const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+
+  const [opentoggleDrawer, setOpentoggleDrawer] = React.useState(false);
+  const menuId = 'primary-search-account-menu';
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+
 
   const handleProfileMenuOpen = (event) => {
     if(userStore.isAuth) {
@@ -130,9 +139,10 @@ const PrimarySearchAppBar = observer(() => {
     setIsAuthPopupOpen(false);
   };
 
-  const menuId = 'primary-search-account-menu';
+  const toggleDrawer = (newOpen) => () => {
+    setOpentoggleDrawer(newOpen);
+  };
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -203,54 +213,42 @@ const PrimarySearchAppBar = observer(() => {
     </Menu>
   );
 
-  const [opentoggleDrawer, setOpentoggleDrawer] = React.useState(false);
-
-  const toggleDrawer = (newOpen) => () => {
-    setOpentoggleDrawer(newOpen);
-  };
-
   return (
     <Box sx={{ zIndex: 1000, position: "sticky", top: 0}}>
       <AppBar position="static" sx={(theme) => ({ backdropFilter: "saturate(180%) blur(20px)", backgroundColor: alpha(theme.palette.primary.main, 0.7) })}>
-        <Toolbar sx={{ padding: matches400 ? "0px 8px" : undefined, position: "relative"}}>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2, marginRight: "0px" }}
-            onClick={toggleDrawer(true)}
-          >
-            <MenuIcon />
-          </IconButton>
-          
-          <Drawer open={opentoggleDrawer} onClose={toggleDrawer(false)}>
-            <MyDrawer toggleDrawer={toggleDrawer}  />
-          </Drawer>
-          
-          <CatalogMenuModal />
-
-          <IconButton 
-            disableRipple 
-            size="large" 
-            color="inherit"
-            onClick={() => navigate(MAIN_ROUTE)}
-          >
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ display: 'block' }}
+        <Toolbar sx={{ width: "100%", padding: matches400 ? "0px 15px" : undefined, position: "relative", display: "flex", justifyContent: "space-between"}}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              sx={{ mr: 2, marginRight: "0px" }}
+              onClick={toggleDrawer(true)}
             >
-              LuxeLane
-            </Typography>
-          </IconButton>
+              <MenuIcon />
+            </IconButton>
+
+            <Drawer open={opentoggleDrawer} onClose={toggleDrawer(false)}>
+              <MyDrawer toggleDrawer={toggleDrawer} />
+            </Drawer>
+
+            {!matches600 && <CatalogMenuModalButton />}
+
+            <IconButton
+              disableRipple
+              size="large"
+              color="inherit"
+              onClick={() => navigate(MAIN_ROUTE)}
+            >
+              <Typography variant="h6" noWrap component="div">
+                LuxeLane
+              </Typography>
+            </IconButton>
+          </Box>
 
           <Search sx={{
-            marginRight: matches600 ? '0px' : undefined,
-            width: matches400 ? '20%' : matches600 ? '30%' : undefined,
-            position: matches600 ? 'absolute' : 'relative',
-            right: matches600 ? '61px' : undefined,
+            flexGrow: 1,
           }}>
             <SearchIconWrapper sx={{padding: matches400 ? "0px 8px" : "0px 16px"}}>
               <SearchIcon />
@@ -261,6 +259,21 @@ const PrimarySearchAppBar = observer(() => {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
+
+          {matches600 && 
+            <Box onClick={handleUserBasketClick}>
+              <IconButton
+                size="large"
+                aria-label="show basket"
+                color="inherit"
+                sx={{padding: "14px 12px 10px 12px"}}
+              >
+                <Badge badgeContent={basketStore.basketCount} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
+            </Box>
+          }
 
           <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -298,9 +311,9 @@ const PrimarySearchAppBar = observer(() => {
               >
                 <AccountCircle />
               </IconButton>
-
             </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' }}}>
+
+            <Box sx={{ display: { xs: 'none', sm: 'flex', md: 'none' }}}>
             <IconButton
               size="large"
               aria-label="show more"
@@ -314,6 +327,9 @@ const PrimarySearchAppBar = observer(() => {
           </Box>
         </Toolbar>
       </AppBar>
+
+      {matches600 && <MobileBottomMenu />}
+
       {renderMobileMenu}
 
       <AuthPopup open={isAuthPopupOpen} setOpen={handleAuthPopupClose} /> 

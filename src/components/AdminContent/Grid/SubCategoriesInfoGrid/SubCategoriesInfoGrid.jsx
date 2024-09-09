@@ -54,19 +54,31 @@ function EditToolbar(props) {
   );
 }
 
-const SubCategoriesInfoGrid = ({ data, updateData}) => {
-  const [rows, setRows] = useState(data);
+const SubCategoriesInfoGrid = ({ data, updateData }) => {
+  const [rows, setRows] = useState([]);
   const [open, setOpen] = useState(false);
   const [newRecord, setNewRecord] = useState({ nameOfSubCategory: '', subCategoryId: null });
-
   const [modalForEditIsOpen, setModalForEditIsOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);
+  const [rowModesModel, setRowModesModel] = useState({});
 
   useEffect(() => {
-    setRows(data);
+    const formattedData = data.map((item) => ({
+      id: item.id,
+      name: item.name,
+      images: (item.images && item.images.length > 0) 
+        ? item.images.map((image) => ({
+            imgSrc: image.imgSrc,
+            imgName: image.imgName,
+          }))
+        : [],
+      category: item.category?.name || 'No category',
+      createdAt: item.createdAt || new Date().toISOString(),
+      updatedAt: item.updatedAt || null,
+    }));
+  
+    setRows(formattedData);
   }, [data]);
-
-  const [rowModesModel, setRowModesModel] = React.useState({});
 
   const handleOpen = () => {
     setOpen(true);
@@ -85,9 +97,9 @@ const SubCategoriesInfoGrid = ({ data, updateData}) => {
     };
 
     try {
-      const { name, url} = await uploadImage(newRecord.icon, 'subCategories/');
-      data.imageName = name;
-      data.imageUrl = url;
+      const result = await uploadImage(newRecord.icon, 'subCategoriesImg');
+      data.imageName = result[0].name;
+      data.imageUrl = result[0].url;
 
       await addNewSubCategory(data);
       const updatedData = await updateData();
@@ -189,8 +201,8 @@ const SubCategoriesInfoGrid = ({ data, updateData}) => {
       headerName: 'Icon',
       width: 100,
       renderCell: (params) => {
-        const hasError = params.row.errors && params.row.errors.image;
-        const imageUrl = params.row.images[0]?.imgSrc || 'No image';
+        const hasError = params.row?.errors?.image;
+        const imageUrl = params.row?.images?.length > 0 ? params.row.images[0].imgSrc : 'No image';
         return (
           <div>
             <img src={imageUrl} alt="No image" style={{ width: '40px', height: '40px', objectFit: 'cover' }} />
@@ -205,10 +217,11 @@ const SubCategoriesInfoGrid = ({ data, updateData}) => {
       width: 200,
       editable: false,
       renderCell: (params) => {
-        const hasError = params.row.errors && params.row.errors.image;
+        const hasError = params.row?.errors?.image;
+        const imageName = params.row?.images?.length > 0 ? params.row.images[0].imgName : 'No image';
         return (
           <div>
-            {params.row.images[0]?.imgName || 'No image'}
+            {imageName}
             {hasError && <div style={{ color: 'red' }}>{params.row.errors.image}</div>}
           </div>
         );
@@ -298,33 +311,37 @@ const SubCategoriesInfoGrid = ({ data, updateData}) => {
         },
       }}
     >
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        editMode="row"
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
-        slots={{
-          toolbar: EditToolbar,
-        }}
-        slotProps={{
-          toolbar: { 
-            setRows, 
-            setRowModesModel, 
-            rows, 
-            updateData, 
-            open, 
-            handleClose, 
-            handleSave, 
-            newRecord, 
-            setNewRecord,
-            handleOpen
-          },
-        }}
-        onProcessRowUpdateError={handleProcessRowUpdateError}
-      />
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          editMode="row"
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={handleRowModesModelChange}
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
+          slots={{
+            toolbar: EditToolbar,
+          }}
+          slotProps={{
+            toolbar: { 
+              setRows, 
+              setRowModesModel, 
+              rows, 
+              updateData, 
+              open, 
+              handleClose, 
+              handleSave, 
+              newRecord, 
+              setNewRecord,
+              handleOpen
+            },
+          }}
+          onProcessRowUpdateError={handleProcessRowUpdateError}
+        />
+      {/* {rows.length > 0 ? (
+        ) : (
+        <div>Loading...</div>
+      )} */}
  
         <EditSubCategoryPopup 
           setModalForEditIsOpen={setModalForEditIsOpen}

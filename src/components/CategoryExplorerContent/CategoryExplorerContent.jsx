@@ -1,15 +1,17 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
+import { Box, Typography, Grid } from "@mui/material";
 
-import { Box, useMediaQuery, Typography, Grid } from "@mui/material";
-
-import { useMode } from "../../theme";
+import { useMediaQuery, useTheme } from '@mui/material';
 import { useParams } from "react-router-dom";
 
 import { RootStoreContext } from "../../store/RootStoreProvider";
 import { PRODUCTSLISTPAGE_ROUTE } from "../../utils/consts";
 
 import SliderSlick from "../Slider/SliderSlick";
+
+import { fetchProductsForAdsBlock } from "../../http/blockAdsApi";
+import ContentBlockSlider from "../ContentBlocks/ContentBlockSlider/ContentBlockSlider";
 
 import { Link as MuiLink } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
@@ -18,10 +20,14 @@ const CategoryExplorerContent = observer(() => {
     const { categoryName } = useParams();
     const decodedCategoryName = decodeURIComponent(categoryName).replace(/__/g, ', ').replace(/_/g, ' ');
     
-    const { catalogStore } = useContext(RootStoreContext);
+    const { catalogStore, userStore } = useContext(RootStoreContext);
 
-    const [theme, colorMode] = useMode();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down("leftBar"));
+    const [dataForAdsBlockSlider, setDataForAdsBlockSlider] = useState([]);
+
+    const theme = useTheme();
+    const matches900 = useMediaQuery(theme.breakpoints.down("md"));
+    const matches600 = useMediaQuery(theme.breakpoints.down("sm"));
+    const matches400 = useMediaQuery(theme.breakpoints.down("ssm"));
 
     const generateCategoryExplorerRoute = (name) => {
         if(name){
@@ -29,46 +35,62 @@ const CategoryExplorerContent = observer(() => {
         }
     }
 
-    return (
-        <Box sx={{width: "100%", height: "auto", display: "flex", flexDirection: "row" }}>
+    useEffect(() => {
+        if(userStore.isAuth){
+            fetchProductsForAdsBlock({itemsCount: 14, userId: userStore.user.id}).then(data => setDataForAdsBlockSlider(data));
+        } else {
+            fetchProductsForAdsBlock({itemsCount: 14}).then(data => setDataForAdsBlockSlider(data));
+        }
+    }, [userStore.isAuth, userStore.user.id]);
 
-            <Box sx={{ width: "100%", padding: "30px" }}>
+    return (
+        <Box sx={{width: "100%", height: "auto", display: "flex", flexDirection: "row", paddingBottom: matches600 ? "56px" : undefined }}>
+
+            <Box sx={{ width: "100%", padding: matches900 ? "8px" : "20px 16px" }}>
 
                 <Box>
                     <Typography variant="h5" sx={{textAlign: "left", marginBottom: "20px"}}>{decodedCategoryName}</Typography>
                 </Box>
 
-                <Box sx={{width: "100%", padding: " 0 30px", margin: "0 auto" }}>
+                <Box sx={{width: "100%", margin: "0 auto",  }}>
                     <SliderSlick />
                 </Box>
 
-
-                <Box sx={{ display: "flex", flexDirection: "column", gap: "50px" }}>
-                    <Grid container spacing={2}>
+                <Box sx={{ display: "flex", flexDirection: "column", marginY: matches900 ? "15px" : "32px" }}>
+                    <Grid container spacing={2} >
                         {catalogStore.catalogСategories.map((item, index) => {
                             if (item.categoryName === decodedCategoryName) {
                                 return item.subCategories.map((subCategory, subIndex) => (
-                                    <Grid item xs={12} sm={6} md={4} lg={3} key={`${index}-${subIndex}`}>
-                                        <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                                            <MuiLink component={RouterLink} underline="none" color="text.main" to={generateCategoryExplorerRoute(subCategory.subCategoryName)}>
+                                    <Grid item xs={12} smm={6} sm={6} md={4} lg={3} key={`${index}-${subIndex}`}>
+                                        <Box sx={{ height: "100%", border: "1px solid #7a7878", borderRadius: "12px", display: "flex", flexDirection: "column", gap: "10px"}}>
+                                            <MuiLink component={RouterLink} sx={{alignContent: "center", borderRadius: "12px 12px 0 0" , backgroundColor: "rgba(0, 0, 0, 0.1)", overflow: "hidden"}} underline="none" color="text.main" to={generateCategoryExplorerRoute(subCategory.subCategoryName)}>
                                                 <img
                                                     src={subCategory.subCategoryImage}
                                                     alt={subCategory.subCategoryName}
-                                                    style={{ width: "100px", height: "100px", objectFit: "contain" }}
+                                                    loading="lazy"
+                                                    style={{ 
+                                                        maxWidth: "100%", 
+                                                        maxHeight: "200px",
+                                                        objectFit: "contain",
+                                                        display: "block",
+                                                        margin: "auto",
+                                                    }}
                                                 />
                                             </MuiLink>
 
-                                            <MuiLink component={RouterLink} underline="none" color="text.main" to={generateCategoryExplorerRoute(subCategory.subCategoryName)}>
-                                                <Typography variant="h5">{subCategory.subCategoryName}</Typography>
-                                            </MuiLink>
-
-                                            {subCategory.types.map((type, typeIndex) => (
-                                                <MuiLink component={RouterLink} underline="none" color="text.main" key={typeIndex} to={generateCategoryExplorerRoute(type.typeName)}>
-                                                    <Typography variant="h6" key={typeIndex}>
-                                                        {type.typeName}
-                                                    </Typography>
+                                            <Box sx={{padding: "5px 10px"}}>
+                                                <MuiLink component={RouterLink} underline="none" color="text.main" to={generateCategoryExplorerRoute(subCategory.subCategoryName)}>
+                                                    <Typography variant="h5" sx={{fontWeight: "500"}} >{subCategory.subCategoryName}</Typography>
                                                 </MuiLink>
-                                            ))}
+
+                                                {subCategory.types.map((type, typeIndex) => (
+                                                    <MuiLink component={RouterLink} underline="hover" color="text.main" key={typeIndex} to={generateCategoryExplorerRoute(type.typeName)}>
+                                                        <Typography sx={{fontSize: "16px"}} key={typeIndex}>
+                                                            {type.typeName}
+                                                        </Typography>
+                                                    </MuiLink>
+                                                ))}
+                                            </Box>
                                         </Box>
                                     </Grid>
                                 ));
@@ -77,6 +99,13 @@ const CategoryExplorerContent = observer(() => {
                             }
                         })}
                     </Grid>
+                </Box>
+
+                <Box sx={{height: "auto"}}>
+                    <ContentBlockSlider 
+                        sectionTitle={"Pеклама"} 
+                        data={dataForAdsBlockSlider}  
+                    />  
                 </Box>
 
             </Box>

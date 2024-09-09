@@ -122,7 +122,7 @@ const CardWrapperBasket = ({product}) => {
         <Box sx={{ width: "100%", padding: "10px", borderBottom: "1px solid #ccc", display: "flex", flexDirection: "column", gap: "5px", justifyContent: "space-between" }}>
             <Box sx={{width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
 
-                <Box sx={{display: "flex", flexDirection: "row"}}>
+                <Box sx={{display: "flex", flexDirection: "row", gap: "10px"}}>
                     <MuiLink component={RouterLink} underline='none' color="#000000" to={PRODUCT_ROUTE(product.id)} sx={{display: "block", textAlign: "center", position: "relative"}}>
                         <LazyLoad once>
                             {product?.images && product.images.length > 0 && (

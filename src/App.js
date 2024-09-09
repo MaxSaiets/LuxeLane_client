@@ -39,10 +39,10 @@ const App = observer(() => {
   useEffect(() => {
     fetchCatalogData();
 
-    // if(userStore.isAuth) {
-    //   recentryViewedStore.fetchRecentlyViewedProducts({userId: userStore.user.id, allInformation: true});
-    //   favoritesStore.fetchUserFavorites(userStore.user.id);
-    // }
+    if(userStore.isAuth) {
+      recentryViewedStore.fetchRecentlyViewedProducts({userId: userStore.user.id, allInformation: true});
+      favoritesStore.fetchUserFavorites(userStore.user.id);
+    }
   }, [userStore, catalogStore, userStore.isAuth]);
 
   return (

@@ -16,7 +16,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const ContentBlockSliderForFavorites = observer(({itemsCount, sectionTitle, data}) => {
+const ContentBlockSliderForFavorites = observer(({itemsCount, sectionTitle, data, showAllItems}) => {
     const theme = useTheme();
     const matches600 = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -74,7 +74,6 @@ const ContentBlockSliderForFavorites = observer(({itemsCount, sectionTitle, data
                     <IconButton
                         size="medium"
                     >
-                    {/* <DeleteIcon sx={{ color: isInBasket ? theme.palette.cartIcons.active : theme.palette.cartIcons.main }} /> */}
                         <DeleteIcon  />
                     </IconButton>
                     <Typography>Clear the list</Typography> 
@@ -84,7 +83,7 @@ const ContentBlockSliderForFavorites = observer(({itemsCount, sectionTitle, data
     );
 
     return (
-        <Box sx={{ width: "100%", margin: matches600 ? "15px 0" : "30px 0", display: "flex", flexDirection: "column", gap: matches600 ? "10px" : "20px", height: "auto"}}>
+        <Box sx={{ width: "100%", margin: matches600 ? "15px 0" : "20px 0", display: "flex", flexDirection: "column", gap: matches600 ? "10px" : "20px", height: "auto"}}>
 
             <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
                 <ContentBlockTitleSimple sectionTitle={sectionTitle} />
@@ -93,7 +92,7 @@ const ContentBlockSliderForFavorites = observer(({itemsCount, sectionTitle, data
             </Box>
 
             <Box sx={{width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap", position: "relative"}}>
-                <CardsList itemsCount={itemsCount} data={data} showAllItems={true} />
+                <CardsList itemsCount={itemsCount} data={data} showAllItems={showAllItems} />
             </Box>
         </Box>
     );

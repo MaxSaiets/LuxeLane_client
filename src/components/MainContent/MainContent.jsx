@@ -44,14 +44,14 @@ const MainContent = observer(() => {
 
     useEffect(() => {
         if(userStore.isAuth){
-            fetchProductsForAdsBlock({itemsCount: 10, userId: userStore.user.id}).then(data => setDataForBlockSlider(data));
+            fetchProductsForAdsBlock({itemsCount: 14, userId: userStore.user.id}).then(data => setDataForBlockSlider(data));
         } else {
-            fetchProductsForAdsBlock({itemsCount: 10}).then(data => setDataForBlockSlider(data));
+            fetchProductsForAdsBlock({itemsCount: 14}).then(data => setDataForBlockSlider(data));
         }
     }, [userStore.isAuth, userStore.user.id]);
 
     return (
-        <Box sx={{width: "100%", height: "auto", display: "flex", flexDirection: "row" }}>
+        <Box sx={{width: "100%", height: "auto", display: "flex", flexDirection: "row", paddingBottom: matches600 ? "56px" : undefined }}>
 
             {!isSmallScreen && (
             <Box sx={{ width: "240px" }}>
@@ -61,7 +61,7 @@ const MainContent = observer(() => {
 
             <Box sx={{ 
                 width: isSmallScreen ? "100%" : "calc(100% - 240px)",  
-                padding: matches600 ? "0px 8px 0px 8px" : matches1200 ? "10px 20px 0px 20px" : "0px 30px 0px 30px",
+                padding: matches600 ? "10px 8px 0px 8px" : matches1200 ? "10px 20px 0px 20px" : "0px 30px 0px 30px",
             }}>
 
                 <Box sx={{width: "100%", padding: matches600 ? "0px" : matches1200 ? "0px 0px 0px 0px" : "0 0px", margin: "0 auto" }}>
@@ -69,9 +69,9 @@ const MainContent = observer(() => {
                 </Box>
 
                 {isSmallScreen && (
-                <Box>
-                    <CatalogList />
-                </Box>
+                    <Box sx={{paddingTop: "10px"}}>
+                        <CatalogList gridSizes={"middle"} />
+                    </Box>
                 )}
                     
                 <Box sx={{}}>
@@ -95,7 +95,7 @@ const MainContent = observer(() => {
                         <ContentBlockSliderForFavorites
                             sectionTitle={"Улюблені"}
                             data={favoritesStore.userFavoriteList}
-                        />  
+                        /> 
                     </Box>
                 )} 
                     

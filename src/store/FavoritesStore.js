@@ -45,6 +45,7 @@ export default class FavoritesStore {
         try {
             const favoritesList = await fetchUserFavorites(userId);
             this.setUserFavorites(favoritesList);
+            console.log("User favorites list: ", JSON.stringify(this._userFavoritesList, null, 2));
         } catch (error) {
             console.error("Error fetching user favorites list: ", error.message);
         } finally {

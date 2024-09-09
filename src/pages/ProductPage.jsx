@@ -14,15 +14,19 @@ import { alpha } from '@mui/material/styles';
 import ReactImageMagnify from 'react-image-magnify';
 
 import { RootStoreContext } from "../store/RootStoreProvider";
+import { useTheme, useMediaQuery } from '@mui/material';
 
 const ProductPage = () => {
     const { userStore, recentryViewedStore } = useContext(RootStoreContext);
+
+    const theme = useTheme(); 
+    const matches600 = useMediaQuery(theme.breakpoints.down('sm'));
 
     const { id } = useParams();
     const [productData, setProductData] = useState(null);
     const [hoveredOnImg, setHoveredOnImg] = useState(false);
     const [hoveredOnArrow, setHoveredOnArrow] = useState(false);
-    console.log("DSFSD", id)
+
     useEffect(() => {
         // if(userStore.isAuth){
         //     recentryViewedStore.addRecentlyViewedProduct({productId: id, userId: userStore.user.id});
@@ -39,11 +43,11 @@ const ProductPage = () => {
     }
 
     return (
-        <Grid container>
+        <Grid container sx={{paddingBottom: matches600 ? "56px" : undefined}}>
             {/* Product navbar */}
             <Grid item xs={12} sx={{
                 position: "sticky",
-                top: "64px",
+                top: matches600 ? "56px" : "64px",
                 zIndex: "1000",
                 borderBottom: "1px solid black",
                 padding: "5px 16px",

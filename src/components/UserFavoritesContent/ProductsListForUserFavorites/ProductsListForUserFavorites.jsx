@@ -42,6 +42,7 @@ const ProductsListForUserFavorites = observer(() => {
                     <ContentBlockSliderForFavorites
                         sectionTitle={"Favorites"}
                         data={favoritesStore.userFavoriteList}
+                        showAllItems={true}
                     />  
                 ) : (
                     <Box sx={{width: "100%", textAlign: "center"}}>

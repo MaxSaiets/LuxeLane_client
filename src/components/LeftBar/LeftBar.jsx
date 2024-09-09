@@ -44,14 +44,17 @@ const LeftBar = observer(() => {
       <CustomScrollbarBox sx={{ 
         display: "flex", 
         flexDirection: "column",
-        paddingTop: "20px",
+        // paddingTop: "20px",
         gap: "20px", 
         position: "sticky", 
         top: "64px", 
         maxHeight: "100vh", 
         overflowY: "auto",
       }}>
-        <CatalogList />
+      
+        <Box sx={{paddingTop: "10px"}}>
+          <CatalogList />
+        </Box>
 
         {userStore.isAuth ? null : <BlockWelcome />}
 

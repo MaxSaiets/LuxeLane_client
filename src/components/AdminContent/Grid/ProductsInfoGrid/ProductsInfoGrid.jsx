@@ -78,35 +78,6 @@ const ProductsInfoGrid = ({ data, updateData}) => {
   };
 
   const handleSave = async () => {
-    //try {
-      //let formData = new FormData();
-
-      //formData.append('title', newRecord.title);
-      //formData.append('price', newRecord.price);
-      //formData.append('subCategories', JSON.stringify(newRecord.subCategories));
-      //formData.append('categories', JSON.stringify(newRecord.categories));
-      //formData.append('brands', JSON.stringify(newRecord.brands));
-      //formData.append('types', JSON.stringify(newRecord.types));
-
-      //const previewImageUrl = await uploadImage(newRecord.previewImage, 'products/');
-      //formData.append('previewImage', previewImageUrl);
-
-      //const additionalImagesUrls = await Promise.all(newRecord.additionalImages.map(file => uploadImage(file, 'products/')));
-      //additionalImagesUrls.forEach(url => {
-        //formData.append('productImages', url);
-      //});
-     
-      //await addNewProduct(formData);
-      
-      //const updatedData = await updateData();
-      //setRows(updatedData);
-    //} catch (error) {
-      //console.error("Error handleSave: ", error.message);
-    //}
-
-    //setOpen(false);
-    //setNewRecord({});
-
     try{
       const data = {
         title: newRecord.title,
@@ -118,16 +89,22 @@ const ProductsInfoGrid = ({ data, updateData}) => {
       };
   
       if (newRecord.previewImage) {
-        const { name, url } = await uploadImage(newRecord.previewImage, 'products/');
-        data.previewImageName = name;
-        data.previewImageUrl = url;
+        const results = await uploadImage(newRecord.previewImage, 'productPreviewImg');
+        data.previewImageName = results[0].name;
+        data.previewImageUrl = results[0].url;
+
+        if (results.length > 1) {
+          data.fullPreviewImageName = results[1].name;
+          data.fullPreviewImageUrl = results[1].url;
+        }
       }
       
       if (newRecord.additionalImages && newRecord.additionalImages.length > 0) {
-        const additionalImagesUrls = await Promise.all(newRecord.additionalImages.map(file => uploadImage(file, 'products/')));
-        data.additionalImages = additionalImagesUrls.map((url, index) => ({
-          name: newRecord.additionalImages[index].name,
-          url
+        const additionalImagesResults = await Promise.all(newRecord.additionalImages.map(file => uploadImage(file, 'productImg')));
+
+        data.additionalImages = additionalImagesResults.map((result, index) => ({
+          name: result[0].name,
+          url: result[0].url
         }));
       }
 

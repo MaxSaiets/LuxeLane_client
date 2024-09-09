@@ -13,9 +13,10 @@ const BasketContent = observer(() => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("leftBar"));
     
     const matches900 = useMediaQuery(theme.breakpoints.down("md"));
+    const matches600 = useMediaQuery(theme.breakpoints.down("sm"));
 
     return (
-        <Box sx={{width: "100%", height: "auto", display: "flex", flexDirection: "row" }}>
+        <Box sx={{width: "100%", height: "auto", display: "flex", flexDirection: "row", paddingBottom: matches600 ? "56px" : undefined }}>
 
             {!isSmallScreen && (
             <Box sx={{ width: "240px" }}>
@@ -23,7 +24,7 @@ const BasketContent = observer(() => {
             </Box>
             )}
 
-            <Box sx={{ width: isSmallScreen ? "100%" : "calc(100% - 240px)", padding: matches900 ? "15px" : "30px" }}>
+            <Box sx={{ width: isSmallScreen ? "100%" : "calc(100% - 240px)", padding: matches900 ? "0px 15px" : "0px 30px" }}>
                 <ProductsListForUserFavorites />
             </Box>
         </Box>

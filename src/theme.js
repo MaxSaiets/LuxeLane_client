@@ -56,6 +56,8 @@ export const themeSettings = (mode) => {
           values: {
             xs: 0,
             ssm: 400,
+            ssmm: 450,
+            smm: 500,
             sm: 600,
             msm: 800,
             md: 900,

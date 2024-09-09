@@ -23,6 +23,7 @@ const ProductCard = ({ product, onAddToBasket, onRemoveFromBasket, onAddToFavori
     const [isFavorite, setIsFavorite] = useState(product.isFavorite);
 
     const theme = useTheme();
+    const matches600 = useTheme().breakpoints.down('sm');
 
     const {userStore} = useContext(RootStoreContext);
 
@@ -81,8 +82,9 @@ const ProductCard = ({ product, onAddToBasket, onRemoveFromBasket, onAddToFavori
     return(
         <Grid 
             item
-            xs={12}
+            xs={6}
             sm={6}
+            msm={4}
             md={4}
             lg={3}
             key={product.id}
@@ -100,13 +102,11 @@ const ProductCard = ({ product, onAddToBasket, onRemoveFromBasket, onAddToFavori
                     position: isHovered ? "absolute" : "relative",
                     top: 0,
                     left: 0,
- 
                     transform: isHovered ? "scale(1.05)" : "scale(1)",
                     transformOrigin: 'center top',
                     transition: "transform 0.3s ease-in-out",
                     boxShadow: isHovered ? "5px 5px 15px rgba(0,0,0,0.3)" : "none",
-                    padding: "16px",
-                    minHeight: "400px",
+                    padding: "10px",
                     zIndex: isHovered ? 100 : 0,
                 }}
             >
@@ -116,9 +116,9 @@ const ProductCard = ({ product, onAddToBasket, onRemoveFromBasket, onAddToFavori
                             {discountPercentage && <Chip label={`-${discountPercentage}%`} variant="filled" color="error" size="small" sx={{fontSize: "12px", fontWeight: "700"}} />}
                         </Box>
 
-                        <Box sx={{justifyContent: "flex-end", display: "flex", flexDirection: "column", gap: "10px"}}>
+                        <Box sx={{ justifyContent: "flex-end", display: "flex", flexDirection: "column", gap: "10px"}}>
                             <IconButton aria-label="add to favorites" onClick={handleFavoriteClick}>
-                                <FavoriteBorderIcon sx={{ color: isFavorite ? theme.palette.cartIcons.active : theme.palette.cartIcons.main}} />
+                                <FavoriteBorderIcon sx={{color: isFavorite ? theme.palette.cartIcons.active : theme.palette.cartIcons.main}} />
                             </IconButton>
                         </Box>
                     </Box>
@@ -130,7 +130,7 @@ const ProductCard = ({ product, onAddToBasket, onRemoveFromBasket, onAddToFavori
                             height="194"
                             src={ product.images[imageIndex] ? product.images[imageIndex] : product.images[0] }
                             alt={product.title}
-                            style={{objectFit: "contain", paddingTop: "10px", margin: "0 auto", display: "block", width: "100%"}}
+                            style={{objectFit: "contain", margin: "0 auto", display: "block", width: "100%"}}
                         />
                     </LazyLoad>
                 </MuiLink>

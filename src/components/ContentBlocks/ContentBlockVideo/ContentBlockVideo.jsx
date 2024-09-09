@@ -16,7 +16,7 @@ const ContentBlockVideo = ({itemsCount, sectionTitle, chanelTitle, sectionLink, 
     const matches400 = useMediaQuery(theme.breakpoints.down('ssm'));
 
     return (
-        <Box sx={{ margin: "30px 0px 45px 0px", display: "flex", flexDirection: "column", gap: matches600 ? "10px" : "20px"}}>
+        <Box sx={{ margin: "20px 0px 45px 0px", display: "flex", flexDirection: "column", gap: matches600 ? "10px" : "20px"}}>
             <Box sx={{display: "flex", justifyContent: "space-between"}}>
                 <ContentBlockTitleSimple sectionTitle={sectionTitle} sectionLink={sectionLink} spesialTitle={chanelTitle}  />
  

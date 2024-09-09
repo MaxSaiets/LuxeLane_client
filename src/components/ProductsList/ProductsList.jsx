@@ -8,7 +8,7 @@ import ProductCard from "../ProductCard/ProductCard";
 
 import { RootStoreContext } from "../../store/RootStoreProvider";
 
-const ProductsList = observer( ({ name, page, setPage, products, productsData, fetchAndSetProducts }) => {
+const ProductsList = observer( ({ name, page, pageCount, setPage, products, fetchAndSetProducts }) => {
     const { basketStore, favoritesStore} = useContext(RootStoreContext);
 
     const handleChange = (event, pageNumber) => {
@@ -52,10 +52,10 @@ const ProductsList = observer( ({ name, page, setPage, products, productsData, f
                 )}
             </Grid>    
 
-            <Box sx={{ borderBottom: "1px solid gray"}}>
+            <Box sx={{ borderBottom: "1px solid gray", padding: "5px"}}>
                 <Stack spacing={2} sx={{alignItems: "center"}}>
                     <Typography>Page: {page}</Typography>
-                    <Pagination count={productsData.pageCount} page={page} onChange={handleChange} />
+                    <Pagination count={pageCount} page={page} onChange={handleChange} />
                 </Stack>
             </Box>
         </Box>

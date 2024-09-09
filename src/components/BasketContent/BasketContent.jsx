@@ -15,7 +15,7 @@ const BasketContent = observer(() => {
     const matches600 = useMediaQuery(theme.breakpoints.down('sm'));
     
     return (
-        <Box sx={{width: "100%", height: "auto", display: "flex", flexDirection: "row" }}>
+        <Box sx={{width: "100%", height: "auto", display: "flex", flexDirection: "row", paddingBottom: matches600 ? "56px" : undefined }}>
 
             {!isSmallScreen && (
                 <Box sx={{ width: "240px" }}>
