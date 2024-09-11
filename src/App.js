@@ -18,32 +18,36 @@ import "./index.css";
 import "./reset.css";
 import AdminPanel from "./pages/AdminPanel";
 
+import LoadingScreen from "./components/LoadingScreen/LoadingScreen";
+
 const App = observer(() => {
   const [theme, colorMode] = useMode();
 
   const { userStore, basketStore, catalogStore, recentryViewedStore, favoritesStore } = useContext(RootStoreContext);
 
-  const fetchCatalogData = async () => {
-    const catalogCategoriesPromise = catalogStore.getCatalogCategoriesData();
-    // const catalogSubCategoriesPromise = catalogStore.getCatalogSubCategories();
-    const checkAuthPromise = userStore.checkAuth();
-
-    // await Promise.all([catalogCategoriesPromise, catalogSubCategoriesPromise, checkAuthPromise])
-    await Promise.all([catalogCategoriesPromise, checkAuthPromise])
-    
-    if (userStore.isAuth) {
-      await basketStore.fetchUserBasket(userStore.user.id);
-    }
-  };
 
   useEffect(() => {
-    fetchCatalogData();
+    const fetchInitialData = async () => {
+      await userStore.checkAuth();
+    };
 
-    if(userStore.isAuth) {
-      recentryViewedStore.fetchRecentlyViewedProducts({userId: userStore.user.id, allInformation: true});
+    fetchInitialData();
+
+  }, [userStore]);
+
+  useEffect(() => {
+    catalogStore.getCatalogCategoriesData();
+    
+    if (userStore.isAuth) {
+      basketStore.fetchUserBasket(userStore.user.id);
       favoritesStore.fetchUserFavorites(userStore.user.id);
+      // recentryViewedStore.fetchRecentlyViewedProducts({ userId: userStore.user.id, allInformation: true });
     }
-  }, [userStore, catalogStore, userStore.isAuth]);
+  }, [userStore.isAuth]);
+
+  if (userStore.isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <HashRouter>

@@ -152,7 +152,7 @@ const ProductsListPageContent = observer(() => {
                     </Grid>
                 )}
 
-                <Grid item sx={{ flex: 1 }}>
+                <Grid item sx={{ flex: 1, minHeight: "410px" }}>
                     <ProductsList
                         name={decodedCategoryName}
                         page={page}

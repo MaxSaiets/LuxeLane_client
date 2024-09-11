@@ -96,15 +96,20 @@ const ProductsInfoGrid = ({ data, updateData}) => {
         if (results.length > 1) {
           data.fullPreviewImageName = results[1].name;
           data.fullPreviewImageUrl = results[1].url;
+          data.fullBigPreviewImageName = results[2].name;
+          data.fullBigPreviewImageUrl = results[2].url;
         }
       }
       
       if (newRecord.additionalImages && newRecord.additionalImages.length > 0) {
+
         const additionalImagesResults = await Promise.all(newRecord.additionalImages.map(file => uploadImage(file, 'productImg')));
 
         data.additionalImages = additionalImagesResults.map((result, index) => ({
-          name: result[0].name,
-          url: result[0].url
+          nameBigPreview: result[0].name,
+          urlBigPreview: result[0].url,
+          nameBigImg: result[1].name,
+          urlBigImg: result[1].url,
         }));
       }
 

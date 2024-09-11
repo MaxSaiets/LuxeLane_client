@@ -10,17 +10,67 @@ export async function uploadImage(file, imgType) {
 
   async function uploadSingleImage(file, path, imgType) {
     const storageRef = ref(storage, path + uniqueName);
-    const options = {
+  
+    let compressedFile = file;
+    let quality = getQuality(imgType);
+    let options = {
       maxSizeMB: getMaxSize(imgType),
       maxWidthOrHeight: getMaxWidthOrHeight(imgType),
-      initialQuality: getQuality(imgType),
+      initialQuality: quality,
       useWebWorker: true,
     };
-
+  
     try {
-      const compressedFile = await imageCompression(file, options);
+      let initialSizeMB = file.size / 1024 / 1024; // початковий розмір файлу в МБ
+  
+      if (imgType === 'productImgBig') {
+        const maxSizeMB = 2;
+        const minSizeMB = 1.5;
+  
+        if (initialSizeMB > maxSizeMB) {
+          while (initialSizeMB > maxSizeMB) {
+            // Зменшити якість, якщо розмір зображення перевищує максимальний розмір
+            options.initialQuality = quality;
+            
+            compressedFile = await imageCompression(file, options);
+            initialSizeMB = compressedFile.size / 1024 / 1024;
+            quality -= 0.05; // Знижуємо якість
+  
+            if (quality <= 0.1) {
+              throw new Error("Не вдалося зменшити розмір зображення до 2 МБ.");
+            }
+          }
+  
+          // Перевірка на розмір менше 1.5 МБ
+          if (initialSizeMB < minSizeMB) {
+            options.initialQuality = 1; // Встановлюємо максимальну якість
+            compressedFile = await imageCompression(file, options);
+          }
+        } else if (initialSizeMB < minSizeMB) {
+          // Якщо файл менше 1.5 МБ, нічого не робимо
+          return new Promise((resolve, reject) => {
+            const uploadTask = uploadBytesResumable(storageRef, file);
+            uploadTask.on('state_changed',
+              (snapshot) => {
+                // Handle the upload progress
+              },
+              (error) => {
+                reject(error);
+              },
+              () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                  resolve({ name: uniqueName, url: downloadURL });
+                });
+              }
+            );
+          });
+        }
+      } else {
+        compressedFile = await imageCompression(file, options);
+      }
+  
       const uploadTask = uploadBytesResumable(storageRef, compressedFile);
-
+  
       return new Promise((resolve, reject) => {
         uploadTask.on('state_changed',
           (snapshot) => {
@@ -36,7 +86,7 @@ export async function uploadImage(file, imgType) {
           }
         );
       });
- 
+  
     } catch (error) {
       console.error("Помилка під час компресії зображення:", error);
       throw error;
@@ -45,7 +95,11 @@ export async function uploadImage(file, imgType) {
 
   if (imgType === 'productPreviewImg') {
     results.push(await uploadSingleImage(file, paths.preview, 'productPreviewImg'));
-    results.push(await uploadSingleImage(file, paths.full, 'productImg'));
+    results.push(await uploadSingleImage(file, paths.bigPreview, 'productImg'));
+    results.push(await uploadSingleImage(file, paths.big, 'productImgBig'));
+  } else if (imgType === 'productImg') {
+    results.push(await uploadSingleImage(file, paths.preview, 'productImg'));
+    results.push(await uploadSingleImage(file, paths.big, 'productImgBig'));
   } else {
     results.push(await uploadSingleImage(file, paths, imgType));
   }
@@ -59,20 +113,25 @@ function imagePaths(imgType) {
     subCategoriesImg: 'subCategories/',
     productPreviewImg: {
       preview: 'products/previews/',
-      full: 'products/big/'
+      bigPreview: 'products/bigPreviews/',
+      big: 'products/big/'
     },
-    productImg: 'products/big/',
+    productImg: {
+      preview: 'products/bigPreviews/',
+      big: 'products/big/'
+    }
   };
 
   return paths[imgType] || '';
-};
+}
 
 function getQuality(imgType) {
   const qualities = {
     categoryImg: 0.7,
     subCategoriesImg: 0.7,
-    productImg: 0.8,
     productPreviewImg: 0.9,
+    productImg: 0.9,
+    productImgBig: 1,
   };
 
   return qualities[imgType] || 0.7;
@@ -84,6 +143,7 @@ function getMaxSize(imgType) {
     subCategoriesImg: 0.3,
     productImg: 0.3,
     productPreviewImg: 0.5,
+    productImgBig: 2, // Обмеження розміру для productImgBig
   };
 
   return sizes[imgType] || 1;
@@ -95,6 +155,7 @@ function getMaxWidthOrHeight(imgType) {
     subCategoriesImg: 400,
     productImg: 500,
     productPreviewImg: 200,
+    productImgBig: undefined, // Не обмежуємо розміри для productImgBig
   };
 
   return sizes[imgType] || 300;
