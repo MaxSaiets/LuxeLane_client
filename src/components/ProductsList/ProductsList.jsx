@@ -32,7 +32,7 @@ const ProductsList = observer( ({ name, page, pageCount, setPage, products, fetc
     };
 
     return (
-        <Box>
+        <Box sx={{display: "flex", flexDirection: "column", height: "100%"}}>
             <Grid container>
                 {products.length > 0 ? (
                     products.map((product) => (
@@ -52,7 +52,7 @@ const ProductsList = observer( ({ name, page, pageCount, setPage, products, fetc
                 )}
             </Grid>    
 
-            <Box sx={{ borderBottom: "1px solid gray", padding: "5px"}}>
+            <Box sx={{ borderBottom: "1px solid gray", padding: "5px", marginTop: 'auto'}}>
                 <Stack spacing={2} sx={{alignItems: "center"}}>
                     <Typography>Page: {page}</Typography>
                     <Pagination count={pageCount} page={page} onChange={handleChange} />

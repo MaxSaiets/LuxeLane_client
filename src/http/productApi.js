@@ -1,8 +1,8 @@
 import { $adminHost, $host } from "./index";
 
-export const fetchProductData = async (id) => {
+export const fetchProductData = async (id, userId) => {
     try {
-        const response = await $host.get('api/products/fetchProductData/' + id);
+        const response = await $host.get(`api/products/fetchProductData/${id}?userId=${userId}`);
 
         return response.data;
     } catch (error) {

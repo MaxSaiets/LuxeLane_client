@@ -21,7 +21,6 @@ const ProductCard = ({ product, onAddToBasket, onRemoveFromBasket, onAddToFavori
     const [imageIndex, setImageIndex] = useState(0);
     const [isInBasket, setIsInBasket] = useState(product.isInBasket);
     const [isFavorite, setIsFavorite] = useState(product.isFavorite);
-
     const theme = useTheme();
     const matches600 = useTheme().breakpoints.down('sm');
 
