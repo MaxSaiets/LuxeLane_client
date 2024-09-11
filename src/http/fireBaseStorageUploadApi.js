@@ -165,5 +165,9 @@ export async function deleteImage(path) {
   const storage = getStorage();
   const storageRef = ref(storage, path);
 
+  if(!storageRef) {
+    return; 
+  }
+  
   return deleteObject(storageRef);
 }

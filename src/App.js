@@ -30,13 +30,14 @@ const App = observer(() => {
     const fetchInitialData = async () => {
       await userStore.checkAuth();
     };
-
+    
+    catalogStore.getCatalogCategoriesData();
+    
     fetchInitialData();
 
   }, [userStore]);
 
   useEffect(() => {
-    catalogStore.getCatalogCategoriesData();
     
     if (userStore.isAuth) {
       basketStore.fetchUserBasket(userStore.user.id);
