@@ -1,8 +1,8 @@
 import { $authHost } from "./index";
 
-export const fetchUserFavorites = async (userId) => {
+export const fetchUserFavorites = async () => {
     try {
-        const response = await $authHost.get(`/api/favorites/fetchUserFavorites/${userId}`);
+        const response = await $authHost.get('/api/favorites/fetchUserFavorites');
         return response.data.favorite_items;
     } catch (error) {
         console.error('Error fetching user favorites:', error);
@@ -10,11 +10,10 @@ export const fetchUserFavorites = async (userId) => {
     } 
 }
 
-export const addToFavorites = async (userId, productId) => {
+export const addToFavorites = async ( productId ) => {
     try {
         const response = await $authHost.post('/api/favorites/addFavoriteItem',
             {
-                userId: userId,
                 productId: productId
             }
         );
@@ -24,12 +23,11 @@ export const addToFavorites = async (userId, productId) => {
         throw error;
     }
 }
-export const removeFromFavorites = async (userId, productId) => {
+export const removeFromFavorites = async ( productId ) => {
     try {
         const response = await $authHost.delete(`/api/favorites/deleteFavoriteItem`,
             {
                 params: {
-                    userId: userId,
                     productId: productId
                 }
             }
@@ -42,15 +40,9 @@ export const removeFromFavorites = async (userId, productId) => {
     }
 }
 
-export const removeFavoriteList = async (userId) => {
+export const removeFavoriteList = async () => {
     try {
-        const response = await $authHost.delete(`/api/favorites/removeFavoriteList`,
-            {
-                params: {
-                    userId: userId,
-                }
-            }
-        );
+        const response = await $authHost.delete(`/api/favorites/removeFavoriteList`);
 
         return response.data;
     } catch (error) {

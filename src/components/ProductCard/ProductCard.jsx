@@ -53,10 +53,10 @@ const ProductCard = ({ product, onAddToBasket, onRemoveFromBasket, onAddToFavori
         if(userStore.isAuth){
             if (isInBasket) {
                 setIsInBasket(false);
-                onRemoveFromBasket(userStore.user.id, product.id);
+                onRemoveFromBasket(product.id);
             } else {
                 setIsInBasket(true);
-                onAddToBasket(userStore.user.id, product.id, true);
+                onAddToBasket(product.id, true);
             }
         } else {
             setIsAuthPopupOpen(true);
@@ -68,10 +68,10 @@ const ProductCard = ({ product, onAddToBasket, onRemoveFromBasket, onAddToFavori
         if(userStore.isAuth){
             if (isFavorite) {
                 setIsFavorite(false);
-                onRemoveFromFavorites(userStore.user.id, product.id);
+                onRemoveFromFavorites(product.id);
             } else {
                 setIsFavorite(true);
-                onAddToFavorites(userStore.user.id, product.id);
+                onAddToFavorites(product.id);
             }
         } else {
             setIsAuthPopupOpen(true);

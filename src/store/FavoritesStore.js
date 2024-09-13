@@ -40,10 +40,10 @@ export default class FavoritesStore {
         return Array.isArray(this._userFavoritesList) ? this._userFavoritesList.length : 0;
     }
     
-    async fetchUserFavorites(userId) {
+    async fetchUserFavorites() {
         this.setLoading(true);
         try {
-            const favoritesList = await fetchUserFavorites(userId);
+            const favoritesList = await fetchUserFavorites();
             this.setUserFavorites(favoritesList);
         } catch (error) {
             console.error("Error fetching user favorites list: ", error.message);
@@ -52,10 +52,10 @@ export default class FavoritesStore {
         }
     }
     
-    async addFavoriteProduct(userId, productId) {
+    async addFavoriteProduct(productId) {
         this.setLoading(true);
         try {
-            const favoriteProductData = await addToFavorites(userId, productId);
+            const favoriteProductData = await addToFavorites(productId);
             action(() => {
                 this._userFavoritesList.push(favoriteProductData);
             })();
@@ -66,10 +66,10 @@ export default class FavoritesStore {
         }
     }
 
-    async removeFavoriteProduct(userId, productId) {
+    async removeFavoriteProduct(productId) {
         this.setLoading(true);
         try {
-            await removeFromFavorites(userId, productId);
+            await removeFromFavorites(productId);
             action(() => {
                 this.setUserFavorites(this._userFavoritesList.filter(product => product.id !== productId));
             })();
@@ -80,13 +80,13 @@ export default class FavoritesStore {
         }
     }
 
-    async removeUserFavoriteList(userId) {
+    async removeUserFavoriteList() {
         this.setLoading(true);
         try {
             if (this._userFavoritesList.length === 0) {
                 return;
             } else {
-                await removeFavoriteList(userId);
+                await removeFavoriteList();
                 action(() => {
                     this.setUserFavorites([]);
                 })();

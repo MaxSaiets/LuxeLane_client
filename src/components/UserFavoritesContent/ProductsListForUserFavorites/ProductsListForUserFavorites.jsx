@@ -27,11 +27,7 @@ const ProductsListForUserFavorites = observer(() => {
     };
 
     useEffect(() => {
-        if(userStore.isAuth){
-            fetchProductsForAdsBlock({itemsCount: 10, userId: userStore.user.id}).then(data => setDataForBlockSlider(data));
-        } else {
-            fetchProductsForAdsBlock({itemsCount: 10}).then(data => setDataForBlockSlider(data));
-        }
+        fetchProductsForAdsBlock({itemsCount: 10}).then(data => setDataForBlockSlider(data));
     }, [userStore.isAuth, userStore.user.id]);
 
     return (

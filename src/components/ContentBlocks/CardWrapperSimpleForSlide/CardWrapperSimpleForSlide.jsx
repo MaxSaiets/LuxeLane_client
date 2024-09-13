@@ -32,12 +32,12 @@ const CardWrapperSimpleForSlide = ({ product }) => {
     if(userStore.isAuth){
         if (isFavorite) {
           product.isFavorite = false;
-          favoritesStore.removeFavoriteProduct(userStore.user.id, product.id);
+          favoritesStore.removeFavoriteProduct(product.id);
           setIsFavorite(false);
         } else {
           product.isFavorite = true;
           setIsFavorite(true);
-          favoritesStore.addFavoriteProduct(userStore.user.id, product.id);
+          favoritesStore.addFavoriteProduct(product.id);
         }
     } else {
       setIsAuthPopupOpen(true);

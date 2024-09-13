@@ -43,11 +43,7 @@ const MainContent = observer(() => {
     const [dataForBlockSlider, setDataForBlockSlider] = useState([]);
 
     useEffect(() => {
-        if(userStore.isAuth){
-            fetchProductsForAdsBlock({itemsCount: 14, userId: userStore.user.id}).then(data => setDataForBlockSlider(data));
-        } else {
-            fetchProductsForAdsBlock({itemsCount: 14}).then(data => setDataForBlockSlider(data));
-        }
+        fetchProductsForAdsBlock({itemsCount: 14}).then(data => setDataForBlockSlider(data));
     }, [userStore.isAuth, userStore.user.id]);
 
     return (
@@ -74,12 +70,14 @@ const MainContent = observer(() => {
                     </Box>
                 )}
                     
-                <Box sx={{}}>
-                    <ContentBlockSlider 
-                        sectionTitle={"Pеклама"} 
-                        data={dataForBlockSlider}  
-                    />  
-                </Box>
+                {dataForBlockSlider.length > 0 && (
+                    <Box sx={{}}>
+                        <ContentBlockSlider 
+                            sectionTitle={"Pеклама"} 
+                            data={dataForBlockSlider}  
+                        />  
+                    </Box>
+                )}
 
                 {userStore.isAuth && recentryViewedStore.hasRecentlyViewedProducts && (
                     <Box sx={{}}>

@@ -1,4 +1,5 @@
-import { createTheme } from "@mui/material";
+import { createTheme, GlobalStyles } from "@mui/material";
+
 import { createContext, useMemo, useState } from "react";
 
 export const themeSettings = (mode) => {
@@ -33,7 +34,10 @@ export const themeSettings = (mode) => {
                 cartIcons:{
                   main: "#30a4c1",
                   active: "#ff0000"
-                }  
+                },
+                btnPrevNextSliderProductPageBottom: {
+                  main: "#000000"
+                }
               }
               : {
                 primary: {
@@ -49,7 +53,10 @@ export const themeSettings = (mode) => {
                 cartIcons:{
                   main: "#30a4c1",
                   active: "#ff0000"
-                } 
+                },
+                btnPrevNextSliderProductPageBottom: {
+                  main: "#ffffff"
+                }
             }),
         },
         breakpoints: {
@@ -95,5 +102,15 @@ export const useMode = () => {
 
     const theme = useMemo(() => createTheme(themeSettings(mode)), [mode])
 
-    return [theme, colorMode];
+    const globalStyles = (
+      <GlobalStyles
+          styles={{
+              ':root': {
+                  '--btnPrevNextSliderProductPageBottom': theme.palette.btnPrevNextSliderProductPageBottom.main,
+              }
+          }}
+      />
+  );
+
+  return [theme, colorMode, globalStyles];
 }

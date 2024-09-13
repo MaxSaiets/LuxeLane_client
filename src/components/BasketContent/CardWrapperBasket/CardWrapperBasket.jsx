@@ -42,24 +42,24 @@ const CardWrapperBasket = ({product}) => {
         handleClose();
 
         if (isInBasket) {
-            basketStore.removeProduct(userStore.user.id, product.id);
+            basketStore.removeProduct(product.id);
         } else {
-            basketStore.addProduct(userStore.user.id, product.id);
+            basketStore.addProduct(product.id);
         }
     };
     
     const handleFavoriteClick = () => {
         if (isFavorite) {
             setIsFavorite(false);
-            favoritesStore.removeFavoriteProduct(userStore.user.id, product.id);
+            favoritesStore.removeFavoriteProduct(product.id);
         } else {
             setIsFavorite(true);
-            favoritesStore.addFavoriteProduct(userStore.user.id, product.id);
+            favoritesStore.addFavoriteProduct(product.id);
         }
     };
 
     const handleUpdateQuantity = ({productId, quantity}) => {
-        basketStore.updateQuantity(userStore.user.id, productId, quantity);
+        basketStore.updateQuantity(productId, quantity);
     };
 
     const menu = (

@@ -21,7 +21,7 @@ import AdminPanel from "./pages/AdminPanel";
 import LoadingScreen from "./components/LoadingScreen/LoadingScreen";
 
 const App = observer(() => {
-  const [theme, colorMode] = useMode();
+  const [theme, colorMode, globalStyles] = useMode();
 
   const { userStore, basketStore, catalogStore, recentryViewedStore, favoritesStore } = useContext(RootStoreContext);
 
@@ -40,8 +40,8 @@ const App = observer(() => {
   useEffect(() => {
     
     if (userStore.isAuth) {
-      basketStore.fetchUserBasket(userStore.user.id);
-      favoritesStore.fetchUserFavorites(userStore.user.id);
+      basketStore.fetchUserBasket();
+      favoritesStore.fetchUserFavorites();
       // recentryViewedStore.fetchRecentlyViewedProducts({ userId: userStore.user.id, allInformation: true });
     }
   }, [userStore.isAuth]);
@@ -55,13 +55,14 @@ const App = observer(() => {
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          {globalStyles}
 
           <div className="app">
             <main className="content">
               
               <NavBar />
               
-              <Box 
+              <Box
                 sx={{ 
                   maxWidth: "1920px",
                   margin: "0 auto",

@@ -96,7 +96,7 @@ const CardsListForSlide = ({carouserSettings, data}) => {
 
     return (
         <Slider {...settings}>
-            {data.map((item, index) => (
+            {data && data.map((item, index) => (
                 <CardWrapperSimpleForSlide key={index} product={item} />
             ))}
         </Slider>

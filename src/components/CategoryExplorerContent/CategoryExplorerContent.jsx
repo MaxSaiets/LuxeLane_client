@@ -36,11 +36,7 @@ const CategoryExplorerContent = observer(() => {
     }
 
     useEffect(() => {
-        if(userStore.isAuth){
-            fetchProductsForAdsBlock({itemsCount: 14, userId: userStore.user.id}).then(data => setDataForAdsBlockSlider(data));
-        } else {
-            fetchProductsForAdsBlock({itemsCount: 14}).then(data => setDataForAdsBlockSlider(data));
-        }
+        fetchProductsForAdsBlock({itemsCount: 14}).then(data => setDataForAdsBlockSlider(data));
     }, [userStore.isAuth, userStore.user.id]);
 
     return (

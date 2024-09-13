@@ -1,10 +1,9 @@
 import { $authHost } from "./index";
 
-export const addProductToBasket = async (userId, productId, quantity=1) => {
+export const addProductToBasket = async (productId, quantity=1) => {
     try {
         const response = await $authHost.post('api/basket/addItemToBasket',
             {
-                userId: userId,
                 productId: productId,
                 quantity: Number(quantity),
             }
@@ -16,9 +15,9 @@ export const addProductToBasket = async (userId, productId, quantity=1) => {
     }
 }
 
-export const fetchBasket = async (userId) => {
+export const fetchBasket = async () => {
     try {
-        const response = await $authHost.get(`api/basket/fetchUserBasket/${userId}`);
+        const response = await $authHost.get(`api/basket/fetchUserBasket`);
 
         return response.data.basket_items;
     } catch (error) {
@@ -27,12 +26,11 @@ export const fetchBasket = async (userId) => {
     }
 }
 
-export const removeProductFromBasket = async (userId, productId) => {
+export const removeProductFromBasket = async (productId) => {
     try {
         const response = await $authHost.delete('api/basket/deleteBasketItem',
             {
                 params: {
-                    userId: userId,
                     productId: productId,
                 }
             }
@@ -44,10 +42,9 @@ export const removeProductFromBasket = async (userId, productId) => {
     }
 }
 
-export const updateProductQuantityInBasket = async (userId, productId, quantity) => {
+export const updateProductQuantityInBasket = async (productId, quantity) => {
     try {
         const response = await $authHost.put('api/basket/updateQuantityItemInBasket', {
-            userId: userId,
             productId: productId,
             quantity: Number(quantity)
         });

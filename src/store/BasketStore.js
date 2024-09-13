@@ -1,7 +1,6 @@
 import { makeAutoObservable } from "mobx";
 
 import { addProductToBasket, fetchBasket, removeProductFromBasket, updateProductQuantityInBasket } from "../http/basketApi";
-import ContentBlockTitleSimple from "../components/ContentBlocks/ContentBlockTitleSimple/ContentBlockTitleSimple";
 
 export default class BasketStore {
     constructor(){
@@ -35,10 +34,10 @@ export default class BasketStore {
         }, 0);
     }
     
-    async addProduct(userId, productId, quantity) {
+    async addProduct(productId, quantity) {
         this.setLoading(true);
         try {
-            const newBasketItem = await addProductToBasket(userId, productId, quantity);
+            const newBasketItem = await addProductToBasket(productId, quantity);
             this._basket.push(newBasketItem);
         } catch (error) {
             console.error("Error adding product to basket: ", error.message);
@@ -47,10 +46,10 @@ export default class BasketStore {
         }
     }
 
-    async fetchUserBasket(userId) {
+    async fetchUserBasket() {
         this.setLoading(true);
         try {
-            const basket = await fetchBasket(userId);
+            const basket = await fetchBasket();
             this.setBasket(basket);
         } catch (error) {
             console.error("Error fetching basket: ", error.message);
@@ -59,10 +58,10 @@ export default class BasketStore {
         }
     }
 
-    async removeProduct(userId, productId) {
+    async removeProduct(productId) {
         this.setLoading(true);
         try {
-            await removeProductFromBasket(userId, productId);
+            await removeProductFromBasket(productId);
 
             this.setBasket(this._basket.filter(product => product.id !== productId));
 
@@ -73,10 +72,10 @@ export default class BasketStore {
         }
     }
 
-    async updateQuantity(userId, productId, quantity) {
+    async updateQuantity(productId, quantity) {
         this.setLoading(true);
         try {
-            const updatedItem = await updateProductQuantityInBasket(userId, productId, quantity);
+            const updatedItem = await updateProductQuantityInBasket(productId, quantity);
             
             const newBasket = this._basket.map(product =>
                 product.id === updatedItem.id

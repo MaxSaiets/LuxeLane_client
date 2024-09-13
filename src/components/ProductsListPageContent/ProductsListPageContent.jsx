@@ -61,7 +61,7 @@ const ProductsListPageContent = observer(() => {
         const { categoryName = decodedCategoryName, pageNumber = page } = options;
         const userId = userStore.user ? userStore.user.id : null;
 
-        const response = await fetchProducts({userId: userId, name: categoryName, page: pageNumber, selectedBrands: selectedFilters.selectedBrands, filters: {price: selectedFilters.selectedPrice}});
+        const response = await fetchProducts({ name: categoryName, page: pageNumber, selectedBrands: selectedFilters.selectedBrands, filters: {price: selectedFilters.selectedPrice}});
 
         if (response) {
             handleAddFilterOption('brands', response.brands);

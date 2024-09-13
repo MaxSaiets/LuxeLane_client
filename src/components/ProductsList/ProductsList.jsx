@@ -17,18 +17,18 @@ const ProductsList = observer( ({ name, page, pageCount, setPage, products, fetc
         fetchAndSetProducts({name, pageNumber});
     };
  
-    const handleAddToBasket = async (userId, productId) => {
-        basketStore.addProduct(userId, productId);
+    const handleAddToBasket = async (productId) => {
+        basketStore.addProduct(productId);
     };
-    const handleRemoveFromBasket = async (userId, productId) => {
-        basketStore.removeProduct(userId, productId);
+    const handleRemoveFromBasket = async (productId) => {
+        basketStore.removeProduct(productId);
     };
 
-    const handleAddToFavoriteList = async (userId, productId) => {
-        favoritesStore.addFavoriteProduct(userId, productId);
+    const handleAddToFavoriteList = async (productId) => {
+        favoritesStore.addFavoriteProduct(productId);
     };
-    const handleRemoveFromFavoriteList = async (userId, productId) => {
-        favoritesStore.removeFavoriteProduct(userId, productId);
+    const handleRemoveFromFavoriteList = async (productId) => {
+        favoritesStore.removeFavoriteProduct(productId);
     };
 
     return (
