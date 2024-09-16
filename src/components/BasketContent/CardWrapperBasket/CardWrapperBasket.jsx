@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useContext, useState } from "react";
+import { Box, Typography, Tooltip } from "@mui/material";
 
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -136,9 +136,30 @@ const CardWrapperBasket = ({product}) => {
                     </MuiLink>
 
                     <MuiLink component={RouterLink} underline='none' color="#000000" to={PRODUCT_ROUTE(product.id)}>
-                        <Typography color="text.main" sx={{fontSize: "16px"}}>
-                            {product.title}
-                        </Typography>
+                        <Tooltip 
+                            title={
+                                <Typography sx={{ fontSize: "16px" }}>
+                                {product.title}
+                                </Typography>
+                            } 
+                            arrow 
+                            >
+                            <Typography 
+                                color="text.main" 
+                                sx={{
+                                fontSize: "14px",
+                                display: "-webkit-box", 
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                WebkitBoxOrient: "vertical",
+                                WebkitLineClamp: 2,
+                                lineHeight: "1.2em",
+                                maxHeight: "2.4em"
+                                }}
+                            >
+                                {product.title}
+                            </Typography>
+                        </Tooltip>
                     </MuiLink>
                 </Box>
 

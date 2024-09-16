@@ -109,7 +109,7 @@ const CatalogList = observer(({ categoriesModalOpen, closeModal, setSelectedCate
                             
                             <ListItemText
                                 primary={item.categoryName}
-                                primaryTypographyProps={{ fontSize: matches400 ? 12 : 14, fontWeight: 'medium' }}
+                                primaryTypographyProps={{ fontSize: matches400 ? 12 : 14, fontWeight: 'medium', color: theme.palette.text.catalogList }}
                             />
                         </ListItemButton>
                     </MuiLink>

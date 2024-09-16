@@ -29,6 +29,7 @@ const ProductPageCarousel = ({data, openModalFullImgs}) => {
                     showStatus={false}
                     swipeable={true}
                     emulateTouch={true}
+                    swipeScrollTolerance={50} // 20px for swipe (default 5px)
                     infiniteLoop={true}
                     showArrows={matches600 ? false : true}
                     renderArrowPrev={(onClickHandler, hasPrev, label) => 

@@ -261,17 +261,10 @@ const PrimarySearchAppBar = observer(() => {
             />
           </Search>
 
-          {matches600 && 
-            <Box onClick={handleUserBasketClick}>
-              <IconButton
-                size="large"
-                aria-label="show basket"
-                color="inherit"
-                sx={{padding: "14px 12px 10px 12px"}}
-              >
-                <Badge badgeContent={basketStore.basketCount} color="error">
-                  <ShoppingCartIcon />
-                </Badge>
+          {matches600 &&
+            <Box onClick={colorMode.toggleColorMode}>
+              <IconButton sx={{padding: "5px"}} color="inherit">
+                {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
               </IconButton>
             </Box>
           }

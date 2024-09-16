@@ -21,6 +21,7 @@ export const themeSettings = (mode) => {
                 text: {
                   main: "#000",
                   mainPageBlocksTitles: "#000",
+                  catalogList: "#000000"
                 },
                 cardWrapper: {
                   border: "#a09f9f"
@@ -30,10 +31,14 @@ export const themeSettings = (mode) => {
                   white: "#ffffff",
                   myDrawer: "#a09f9f",
                   btnClose: "grey",
+                  filterLeftBar: "#e7e7e7",
                 },
                 cartIcons:{
                   main: "#30a4c1",
                   active: "#ff0000"
+                },
+                icons:{
+                  leftBarSocials: "#343434"
                 },
                 btnPrevNextSliderProductPageBottom: {
                   main: "#000000"
@@ -49,10 +54,21 @@ export const themeSettings = (mode) => {
                 text: { 
                   main: "#fff",
                   mainPageBlocksTitles: "#ffffff",
+                  catalogList: "#ffffff"
+                },
+                background: {
+                  main: "#cecece",
+                  white: "#ffffff",
+                  myDrawer: "#a09f9f",
+                  btnClose: "grey",
+                  filterLeftBar: "#3e3e3e",
                 },
                 cartIcons:{
                   main: "#30a4c1",
                   active: "#ff0000"
+                },
+                icons:{
+                  leftBarSocials: "#ffffff"
                 },
                 btnPrevNextSliderProductPageBottom: {
                   main: "#ffffff"

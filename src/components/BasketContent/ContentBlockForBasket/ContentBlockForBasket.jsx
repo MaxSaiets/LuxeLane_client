@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import { Box, Typography, Button} from "@mui/material";
+import { Box, Typography, Button, Tooltip } from "@mui/material";
 
 import ContentBlockTitleSimple from "../../ContentBlocks/ContentBlockTitleSimple/ContentBlockTitleSimple";
 import { useTheme, useMediaQuery } from '@mui/material';
@@ -25,7 +25,7 @@ const ContentBlockForBasket = observer(() => {
                 gap: matches600 ? "0px" : "10px",
                 position: "sticky",
                 top: matches600 ? "auto" : "126px",
-                bottom: matches600 ? "10px" : "auto",
+                bottom: matches600 ? "66px" : "auto",
             }}
         >
             <Box sx={{
@@ -53,15 +53,30 @@ const ContentBlockForBasket = observer(() => {
                 
                 {basketStore.basket.map((product, index) => (
                     <Box key={index} sx={{display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "10px" }}>
-                        <Typography 
-                            sx={{ 
-                                flex: 1,
-                                wordBreak: "break-word",
-                                fontSize: matches600 ? "12px" : "auto"
-                            }}
-                        >
-                            {product.title}
-                        </Typography>
+                        <Tooltip 
+                            title={
+                                <Typography sx={{ fontSize: "16px" }}>
+                                {product.title}
+                                </Typography>
+                            } 
+                            arrow 
+                            >
+                            <Typography 
+                                color="text.main" 
+                                sx={{
+                                fontSize: "14px",
+                                display: "-webkit-box", 
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                WebkitBoxOrient: "vertical",
+                                WebkitLineClamp: 2,
+                                lineHeight: "1.2em",
+                                maxHeight: "2.4em"
+                                }}
+                            >
+                                {product.title}
+                            </Typography>
+                        </Tooltip>
         
                         <Typography 
                             sx={{ 

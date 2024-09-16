@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, IconButton, Typography, Button, Tooltip } from '@mui/material';
+import { Box, IconButton, Typography, Button, Tooltip, Modal, Backdrop } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -10,51 +10,38 @@ const FullCarouselImgsModal = ({ isOpen, onClose, images, title, selectedImageIn
     if (!isOpen) return null;
 
     return (
-        <Box
-            onClick={onClose} // Закриття при кліку на фон
+        <Modal
+            open={isOpen}
+            onClose={onClose}
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                sx: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.9)', // Темніший фон
+                },
+            }}
             sx={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                maxHeight: '100vh',
-                backgroundColor: 'rgba(0, 0, 0, 0.9)',
                 display: 'flex',
-                flexDirection: 'column',
                 alignItems: 'center',
-                // justifyContent: 'center',
-                zIndex: 1000,
-                padding: 2,
-                paddingTop: "40%"
+                justifyContent: 'center',
+                margin: "20px auto"
             }}
         >
-            <IconButton
-                onClick={onClose}
-                sx={{
-                    position: 'absolute',
-                    top: 20,
-                    right: 20,
-                    color: 'white',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    '&:hover': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)'
-                    }
-                }}
-            >
-                <CloseIcon />
-            </IconButton>
-
             <Box
                 onClick={(e) => e.stopPropagation()} // Зупинка події, щоб не закривати модал при кліку на вміст
                 sx={{
                     width: '90%',    
-                    height: '80%',
+                    height: '100%',
                     maxWidth: '500px',
-                    maxHeight: '500px',
+                    maxHeight: '600px',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    overflow: 'auto',
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none',
+                    '&::-webkit-scrollbar': {
+                        display: 'none',
+                    },
                 }}
             >
                 <Carousel
@@ -123,11 +110,11 @@ const FullCarouselImgsModal = ({ isOpen, onClose, images, title, selectedImageIn
                                 maxWidth: '100%',
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
-                                textOverflow: 'ellipsis'
+                                textOverflow: 'ellipsis',
+                                zIndex: 10
                             }}
                         >
-                            {/* {title} */}
-                            Ноутбук Acer Aspire 7 A715-76G-56U7 (NH.QN4EU.001) Charcoal Black / Intel Core i5-12450H / RAM 16 ГБ / SSD 512 ГБ / nVidia GeForce RTX 2050, 4 ГБ / Підсвітка клавіатури
+                            {title}
                         </Typography>
                     </Tooltip>
                     
@@ -146,7 +133,7 @@ const FullCarouselImgsModal = ({ isOpen, onClose, images, title, selectedImageIn
                     </Box>
                 </Box>
             </Box>
-        </Box>
+        </Modal>
     );
 };
 

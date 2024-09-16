@@ -7,6 +7,7 @@ import { loginUserWithEmailAndPassFireBase, registerUserWithEmailAndPassFireBase
 
 export default class UserStore {
     constructor(){
+        this.rootStore = null;
         this._isAuth = false // _ означає що ця змінна не може мінятися
         this._user = {}
         this._isLoading = false
@@ -30,6 +31,11 @@ export default class UserStore {
     setLoading(bool){
         this._isLoading = bool  
     }
+
+    setRootStore(rootStore) {
+        this.rootStore = rootStore;
+    }
+
     // get (викликається тількі тоді коли змінна яка була всередині зміниться)
     get isAuth(){
         return this._isAuth
@@ -39,6 +45,14 @@ export default class UserStore {
     }
     get isLoading(){
         return this._isLoading
+    }
+
+    clearStore() {
+        this._isAuth = false;
+        this._user = {};
+        this._isLoading = false;
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
     }
 
     async login(email, password){
@@ -81,15 +95,14 @@ export default class UserStore {
     async logout(){
         try {
             const auth = getAuth();
-            signOut(auth).then(() => { 
-                // Sign-out successful.
+            signOut(auth)
+                .then(() => { 
+                    // Sign-out successful.
+                    this.rootStore.clearAllStores();
                 }).catch((error) => {
-                console.log(error.message)
-            });
-
-            localStorage.removeItem('token');
-            this.setIsAuth(false);
-            this.setUser({});
+                    console.log(error.message)
+                }
+            );
         } catch (e) {
             console.log(e.response?.message);
         }
@@ -124,6 +137,7 @@ export default class UserStore {
             console.error("Error checking authentication:", error); 
         }
     }
+
     //UPDATE import { getAuth, updateProfile } from "firebase/auth";
     // const auth = getAuth();
     // updateProfile(auth.currentUser, {

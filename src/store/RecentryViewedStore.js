@@ -29,14 +29,19 @@ export default class RecentlyViewedStore {
         return this._recentlyViewedProducts.length > 0;
     }
 
-    async addRecentlyViewedProduct({userId, productId}) {
+    clearStore() {
+        this.setRecentlyViewedProducts([]);
+        this.setLoading(false);
+    }
+
+    async addRecentlyViewedProduct({productId}) {
         this.setLoading(true);
         try {
             const productExists = this._recentlyViewedProducts.some(item => item.productId === productId);
             if (productExists) {
                 return;
             } else {
-                const product = await addRecentlyViewedItem({ userId, productId });
+                const product = await addRecentlyViewedItem({ productId });
                 this._recentlyViewedProducts.push(product);
             }
         } catch (error) {
@@ -46,10 +51,11 @@ export default class RecentlyViewedStore {
         }
     }
 
-    async fetchRecentlyViewedProducts({userId, allInformation}) {
+    async fetchRecentlyViewedProducts({allInformation}) {
         this.setLoading(true);
         try {
-            const products = await fetchRecentlyViewedProducts({ userId, allInformation });
+            const products = await fetchRecentlyViewedProducts({ allInformation });
+
             this.setRecentlyViewedProducts(products);
         } catch (error) {
             console.error("Error fetching recently viewed products: ", error.message);
@@ -58,10 +64,10 @@ export default class RecentlyViewedStore {
         }
     }
 
-    async removeRecentlyViewedProduct(userId, productId) {
+    async removeRecentlyViewedProduct(productId) {
         this.setLoading(true);
         try {
-            await removeRecentlyViewedProduct({ userId, productId });
+            await removeRecentlyViewedProduct({ productId });
             this.setRecentlyViewedProducts(this._recentlyViewedProducts.filter(product => product.id !== productId));
         } catch (error) {
             console.error("Error removing recently viewed product: ", error.message);
@@ -70,10 +76,10 @@ export default class RecentlyViewedStore {
         }
     }
 
-    async removeRecentlyViewedList(userId) {
+    async removeRecentlyViewedList() {
         this.setLoading(true);
         try {
-            await removeRecentlyViewedList({ userId });
+            await removeRecentlyViewedList();
             this.setRecentlyViewedProducts([]);
         } catch (error) {
             console.error("Error removing recently viewed list: ", error.message);

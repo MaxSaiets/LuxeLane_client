@@ -5,10 +5,14 @@ import AdminRouter from "../components/Routers/AdminRouter";
 import AdminSideBar from "../components/AdminContent/AdminSideBar/AdminSideBar";
 
 import { Box } from "@mui/material";
+import { useMediaQuery, useTheme } from '@mui/material';
 
 const AdminPanel = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
 
+    const theme = useTheme();
+    const matches600 = useMediaQuery(theme.breakpoints.down('sm'));
+    
     const sideBarWidth = isCollapsed ? 80 : 250;
 
     return (
@@ -25,9 +29,11 @@ const AdminPanel = () => {
                     <Box 
                         sx={{
                             flexGrow: 1, 
-                            padding: "0 20px", 
+                            padding: matches600 ? '10px' : '20px', 
                             maxWidth: `calc(100vw - ${sideBarWidth}px)`, 
-                            boxSizing: "border-box"
+                            boxSizing: "border-box",
+                            marginBottom: matches600 ? "56px" : "0px",
+                            overflowY: "auto"
                         }}
                     >
                         <AdminRouter />

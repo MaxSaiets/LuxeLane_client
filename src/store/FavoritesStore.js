@@ -40,6 +40,10 @@ export default class FavoritesStore {
         return Array.isArray(this._userFavoritesList) ? this._userFavoritesList.length : 0;
     }
     
+    clearStore() {
+        this.setUserFavorites([]);
+        this.setLoading(false);
+    }
     async fetchUserFavorites() {
         this.setLoading(true);
         try {

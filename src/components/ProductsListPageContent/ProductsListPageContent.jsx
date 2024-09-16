@@ -59,7 +59,6 @@ const ProductsListPageContent = observer(() => {
 
     const fetchAndSetProducts = useCallback(async (options) => {
         const { categoryName = decodedCategoryName, pageNumber = page } = options;
-        const userId = userStore.user ? userStore.user.id : null;
 
         const response = await fetchProducts({ name: categoryName, page: pageNumber, selectedBrands: selectedFilters.selectedBrands, filters: {price: selectedFilters.selectedPrice}});
 
@@ -92,18 +91,18 @@ const ProductsListPageContent = observer(() => {
         setModalOpen(false);
     };
     return (
-        <Grid container sx={{padding: matches600 ? "8px" : " 12px 24px", maxWidth: "1570px", margin: "0 auto", paddingBottom: matches600 ? "56px" : undefined}}>
+        <Grid container sx={{ maxWidth: "1570px", margin: "0 auto", paddingBottom: matches600 ? "56px" : undefined}}>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{padding: matches600 ? "8px 8px 0px 8px" : "12px 12px 0px 12px", bgcolor: theme.palette.background.filterLeftBar}}>
                 <Box sx={{}}>
                     <Typography fontSize={matches900 ? "22px" : "30px"}>{decodedCategoryName}</Typography>
                 </Box>
             </Grid>
 
-            <Grid item xs={12} sx={(theme) => ({paddingY: matches900 ? "8px" : "16px", display: "flex", flexDirection: "column", gap: "5px", borderBottom: "1px solid gray", position: "sticky", top: matches600 ? "54px" : "60px", zIndex: "100", background: theme.palette.background.white })}>
+            <Grid item xs={12} sx={(theme) => ({ padding: matches900 ? "8px" : "16px", display: "flex", flexDirection: "column", gap: "5px", borderBottom: "1px solid gray", position: "sticky", top: matches600 ? "54px" : "60px", zIndex: 1000, bgcolor: theme.palette.background.filterLeftBar })}>
                 <Typography fontSize={16}>Знайдено товарів: {productsCount}</Typography>
 
-                <Box sx={{display: "flex", gap: "10px"}}>
+                <Box sx={{display: "flex", gap: "10px", bgcolor: theme.palette.background.filterLeftBar}}>
 
                     {matches900 && (
                         <Button variant="contained" color="success" onClick={handleOpenModal}>
@@ -142,7 +141,7 @@ const ProductsListPageContent = observer(() => {
 
             <Grid container>
                 {!matches900 && (
-                    <Grid item sx={{ width: "250px", bgcolor: "#e7e7e7", height: "100%", borderRight: "1px solid gray" }}>
+                    <Grid item sx={{ width: "250px", bgcolor: theme.palette.background.filterLeftBar, height: "100%", borderRight: "1px solid gray", padding: "0px 16px 0px 16px" }}>
                         <ProductsFilters
                             selectedFilters={selectedFilters}
                             handleAddFilterOption={handleAddFilterOption}
@@ -165,9 +164,8 @@ const ProductsListPageContent = observer(() => {
 
                 {/* Modal for filters */}
                 <Modal open={isModalOpen} onClose={handleCloseModal}>
-                    <Box sx={{ width: "250px", height: "100%", bgcolor: "white", position: "fixed", top: 0, left: 0, padding: matches900 ? "8px" : "20px", boxShadow: 24 }}>
+                    <Box sx={{ width: "250px", height: "100%", bgcolor: "white", position: "fixed", top: 0, left: 0, padding: matches900 ? "8px" : "20px", boxShadow: 24, bgcolor: theme.palette.background.filterLeftBar }}>
                         
-                        {/* <Button onClick={handleCloseModal} sx={{ marginTop: "20px" }}>Close</Button> */}
                         <Button 
                             onClick={handleCloseModal} 
                             variant="text" 
@@ -181,8 +179,8 @@ const ProductsListPageContent = observer(() => {
                                 alignItems: "center"
                             }}
                         >
-                            <ArrowBackIcon sx={{ marginRight: "5px", fontSize: "20px" }} />
-                            <Typography variant="body1" sx={{ textAlign: "left" }}>Фільтри</Typography>
+                            <ArrowBackIcon sx={{ marginRight: "5px", fontSize: "20px", color: theme.palette.text.main }} />
+                            <Typography variant="body1" sx={{ textAlign: "left", color: theme.palette.text.main }}>Фільтри</Typography>
                         </Button>
 
                         <Divider />

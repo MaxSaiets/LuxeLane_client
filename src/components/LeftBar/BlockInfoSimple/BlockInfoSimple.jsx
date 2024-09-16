@@ -6,11 +6,15 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+import { useTheme } from '@mui/material';
+
 const BlockInfoSimple = ({blockTitle, data, useAccordion = false, bgcolorForAccordion = "#fff"}) => {
+    const theme = useTheme();
+
     const content = (
         <Box sx={{display: "flex", flexDirection: "column"}}>
             {data.map((item, index) => (
-                <Link href={item.href} underline="hover" rel="noreferrer" key={index} sx={{ paddingTop: index === 0 ? "0px" : "5px", paddingBottom: index === data.length - 1 ? "0px" : "5px", fontSize: 16, color: "#333333", "&:hover": {color: "#656464"}}} >
+                <Link href={item.href} underline="hover" rel="noreferrer" key={index} sx={{ paddingTop: index === 0 ? "0px" : "5px", paddingBottom: index === data.length - 1 ? "0px" : "5px", fontSize: 16, color: theme.palette.text.main, "&:hover": {color: "#656464"}}} >
                     {item.text}
                 </Link>
             ))}
@@ -25,7 +29,7 @@ const BlockInfoSimple = ({blockTitle, data, useAccordion = false, bgcolorForAcco
                 id="panel1-header" 
                 sx={{display: "flex", justifyContent: "space-between", alignItems: "center", paddingX: "20px"}}
             >
-                <Typography sx={{ textAlign: "left", fontFamily: "Arial", fontSize: "16px", fontWeight: 600 }}>
+                <Typography sx={{ textAlign: "left", fontFamily: "Arial", fontSize: "16px", color: theme.palette.text.main, fontWeight: 600 }}>
                     {blockTitle}
                 </Typography>
             </AccordionSummary>
@@ -37,7 +41,7 @@ const BlockInfoSimple = ({blockTitle, data, useAccordion = false, bgcolorForAcco
     ) : (
         <Box sx={{ display: "flex", flexDirection: "column", gap: "15px"}}>
             <Box sx={{display: "flex", flexDirection: "column", justifyContent: "center", gap: "15px", paddingX: "20px"}}>
-                <Typography sx={{ textAlign: "left", fontFamily: "Arial", fontSize: "16px", fontWeight: 600 }}>
+                <Typography sx={{ textAlign: "left", fontFamily: "Arial", fontSize: "16px", color: theme.palette.text.main, fontWeight: 600 }}>
                     {blockTitle}
                 </Typography>
                 {content}

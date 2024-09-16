@@ -1,15 +1,17 @@
 import React, { useContext } from "react";
 import { Box, Typography } from '@mui/material';
 import { Fragment } from "react";
-import { Link } from "@mui/material";
 import { RootStoreContext } from "../../../store/RootStoreProvider";
 import { PRODUCTSLISTPAGE_ROUTE } from "../../../utils/consts";
 
 import { Link as MuiLink } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
+import { useTheme } from '@mui/material';
+
 const SubCatalogList = ({ category, closeModal }) => {
     const { catalogStore } = useContext(RootStoreContext);
+    const theme = useTheme();
 
     const generateCategoryExplorerRoute = (name) => {
         if (name) {
@@ -33,7 +35,7 @@ const SubCatalogList = ({ category, closeModal }) => {
                                         to={generateCategoryExplorerRoute(subItem.subCategoryName)}
                                         onClick={closeModal}
                                     >
-                                        <Typography sx={{ fontSize: "16px" }}>
+                                        <Typography sx={{ fontSize: "16px", color: theme.palette.text.catalogList }}>
                                             {subItem.subCategoryName}
                                         </Typography>
                                     </MuiLink>
@@ -48,7 +50,7 @@ const SubCatalogList = ({ category, closeModal }) => {
                                             to={generateCategoryExplorerRoute(type.typeName)}
                                             onClick={closeModal}
                                         >
-                                            <Typography sx={{ fontSize: "14px" }}>
+                                            <Typography sx={{ fontSize: "14px", color: theme.palette.text.catalogList}}>
                                                 {type.typeName}
                                             </Typography>
                                         </MuiLink>

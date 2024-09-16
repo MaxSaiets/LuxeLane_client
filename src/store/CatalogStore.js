@@ -26,6 +26,11 @@ export default class CatalogStore {
         return this._catalogSubСategories;
     }
 
+    clearStore() {
+        this._catalogСategoriesData = [];
+        this._catalogSubСategories = [];
+    }
+
     async getCatalogCategoriesData(){
         try {
             const response = await fetchCategoriesData();

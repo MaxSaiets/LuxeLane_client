@@ -38,7 +38,6 @@ const ProductPageContent = observer(() => {
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
     const openModalFullImgs = (index) => {
-        console.log("Open modal with index:", index);
         setSelectedImageIndex(index);
         setIsModalFullImgsOpen(true);
     };
@@ -47,26 +46,27 @@ const ProductPageContent = observer(() => {
         setIsModalFullImgsOpen(false);
     };
     
+    
     useEffect(() => {
         const loadProductData = async () => {
             setIsLoadingProduct(true);
             try {
-                if (userStore.isAuth) {
-                    const data = await fetchProductData(id, userStore.user.id);
-                    // console.log("Product data:", data);
-
-                    setProductData(data);
-                }
+                const data = await fetchProductData(id);
+                setProductData(data);
             } catch (error) {
                 console.error("Error loading product data:", error);
             } finally {
                 setIsLoadingProduct(false);
             }
         };
-
+        
         loadProductData();
     }, [id, userStore.isAuth, userStore.user.id]);
     
+    useEffect(() => {
+        recentryViewedStore.addRecentlyViewedProduct({productId: id});
+    }, []);
+
     if (!productData || isLoadingProduct) {
         return <LoadingScreen text={"Loading product data..."} />;
     }
@@ -171,22 +171,22 @@ const ProductPageContent = observer(() => {
                     }
                 }}>
                     <MuiLink component={RouterLink} underline='none' color="#000000" to={"#product-description"}>
-                        <Typography variant="body1" sx={{fontWeight: "500"}} component="div">
+                        <Typography variant="body1" sx={{fontWeight: "500", color: theme.palette.text.main}} component="div">
                             Усе про товар
                         </Typography>
                     </MuiLink>
                     <MuiLink component={RouterLink} underline='none' color="#000000" to={"/"}>
-                        <Typography variant="body1" sx={{fontWeight: "500"}} component="div">
+                        <Typography variant="body1" sx={{fontWeight: "500", color: theme.palette.text.main}} component="div">
                             Характеристики
                         </Typography>
                     </MuiLink>
                     <MuiLink component={RouterLink} underline='none' color="#000000" to={"/"}>
-                        <Typography variant="body1" sx={{fontWeight: "500"}} component="div">
+                        <Typography variant="body1" sx={{fontWeight: "500", color: theme.palette.text.main}} component="div">
                             Відгуки
                         </Typography>
                     </MuiLink>
                     <MuiLink component={RouterLink} underline='none' color="#000000" to={"/"}>
-                        <Typography variant="body1" sx={{fontWeight: "500"}} component="div">
+                        <Typography variant="body1" sx={{fontWeight: "500", color: theme.palette.text.main}} component="div">
                             Питання
                         </Typography>
                     </MuiLink>

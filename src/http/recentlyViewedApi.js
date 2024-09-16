@@ -1,11 +1,13 @@
 import { $authHost } from "./index";
 
-export const addRecentlyViewedItem = async ({userId, productId}) => {
+export const addRecentlyViewedItem = async ({productId}) => {
     try {
+        console.log("productId HTTP: ", productId);
+        
         const response = await $authHost.post('api/recentlyViewed/addRecentlyViewedItem', {
-            userId: userId,
             productId: productId
         });
+        console.log("productId HTTP: ", response.data);
         return response.data;
     } catch (error) {
         console.error("Error adding recently viewed product: ", error.message);
@@ -13,9 +15,9 @@ export const addRecentlyViewedItem = async ({userId, productId}) => {
     }
 }
 
-export const fetchRecentlyViewedProducts = async ({userId, allInformation}) => {
+export const fetchRecentlyViewedProducts = async ({allInformation}) => {
     try {
-        const response = await $authHost.get(`api/recentlyViewed/fetchUsersRecentlyViewed/${userId}`, {
+        const response = await $authHost.get(`api/recentlyViewed/fetchUsersRecentlyViewed`, {
             params: { allInformation }
         });
 
@@ -26,10 +28,9 @@ export const fetchRecentlyViewedProducts = async ({userId, allInformation}) => {
     }
 }
 
-export const removeRecentlyViewedProduct = async ({userId, productId}) => {
+export const removeRecentlyViewedProduct = async ({productId}) => {
     try {
         const response = await $authHost.delete('api/recentlyViewed/deleteRecentlyViewedItem', {
-            userId: userId,
             productId: productId
         });
         return response.data;
@@ -39,10 +40,9 @@ export const removeRecentlyViewedProduct = async ({userId, productId}) => {
     }
 }
 
-export const removeRecentlyViewedList = async ({userId}) => {
+export const removeRecentlyViewedList = async () => {
     try {
-        const response = await $authHost.post(`api/recentlyViewed/deleteRecentlyViewedList/${userId}`);
-        console.log(response.data);
+        const response = await $authHost.post(`api/recentlyViewed/deleteRecentlyViewedList`);
         return response.data;
     } catch (error) {
         console.error("Error removing recently viewed product: ", error.message);

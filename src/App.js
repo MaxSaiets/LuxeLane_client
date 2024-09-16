@@ -38,11 +38,10 @@ const App = observer(() => {
   }, [userStore]);
 
   useEffect(() => {
-    
     if (userStore.isAuth) {
       basketStore.fetchUserBasket();
       favoritesStore.fetchUserFavorites();
-      // recentryViewedStore.fetchRecentlyViewedProducts({ userId: userStore.user.id, allInformation: true });
+      recentryViewedStore.fetchRecentlyViewedProducts({ allInformation: true });
     }
   }, [userStore.isAuth]);
 

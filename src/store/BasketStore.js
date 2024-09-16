@@ -34,6 +34,11 @@ export default class BasketStore {
         }, 0);
     }
     
+    clearStore() {
+        this._basket = [];
+        this._isLoading = false;
+    }
+
     async addProduct(productId, quantity) {
         this.setLoading(true);
         try {

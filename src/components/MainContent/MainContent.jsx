@@ -81,6 +81,14 @@ const MainContent = observer(() => {
 
                 {userStore.isAuth && recentryViewedStore.hasRecentlyViewedProducts && (
                     <Box sx={{}}>
+                        <ContentBlockSliderForFavorites
+                            sectionTitle={"Переглянуті товари"}
+                            data={recentryViewedStore.recentlyViewedProducts}
+                        />  
+                    </Box>
+                )}
+                {userStore.isAuth && recentryViewedStore.hasRecentlyViewedProducts && (
+                    <Box sx={{}}>
                         <ContentBlockSlider
                             sectionTitle={"Переглянуті товари"}
                             data={recentryViewedStore.recentlyViewedProducts}

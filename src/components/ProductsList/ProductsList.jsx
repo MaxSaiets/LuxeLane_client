@@ -52,7 +52,7 @@ const ProductsList = observer( ({ name, page, pageCount, setPage, products, fetc
                 )}
             </Grid>    
 
-            <Box sx={{ borderBottom: "1px solid gray", padding: "5px", marginTop: 'auto'}}>
+            <Box sx={{ borderBottom: "1px solid gray", padding: "10px 0px 20px 0px", marginTop: 'auto'}}>
                 <Stack spacing={2} sx={{alignItems: "center"}}>
                     <Typography>Page: {page}</Typography>
                     <Pagination count={pageCount} page={page} onChange={handleChange} />

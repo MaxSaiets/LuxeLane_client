@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
 import { Box, Card, CardContent, Chip, IconButton, Typography, Tooltip } from '@mui/material';
 
 import LazyLoad from 'react-lazyload';
@@ -52,15 +52,15 @@ const CardWrapperSimpleForSlide = ({ product }) => {
     <Card sx={{ margin: "0 5px", height: "320px", maxHeight: "320px", padding:  matches800 ? "8px" : "10px", border: "1px solid", borderColor: "cardWrapper.border"}}>
       <Box sx={{padding: 0, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
         <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-            <Box sx={{paddingTop: "5px"}}>
-              {product.discountPercentage && <Chip label={`-${product.discountPercentage}%`} variant="filled" color="error" size="small" sx={{fontSize: "12px", fontWeight: "700"}} />}
-            </Box>
+          <Box sx={{paddingTop: "5px"}}>
+            {product.discountPercentage && <Chip label={`-${product.discountPercentage}%`} variant="filled" color="error" size="small" sx={{fontSize: "12px", fontWeight: "700"}} />}
+          </Box>
 
-            <Box sx={{justifyContent: "flex-end", display: "flex", flexDirection: "column"}}>
-                <IconButton aria-label="add to favorites" onClick={handleFavoriteClick} sx={{paddingBottom: "4px"}}>
-                  <FavoriteBorderIcon sx={{ color: isFavorite ? theme.palette.cartIcons.active : theme.palette.cartIcons.main}} />
-                </IconButton>
-            </Box>
+          <Box sx={{justifyContent: "flex-end", display: "flex", flexDirection: "column"}}>
+            <IconButton aria-label="add to favorites" onClick={handleFavoriteClick}>
+              <FavoriteBorderIcon sx={{ color: isFavorite ? theme.palette.cartIcons.active : theme.palette.cartIcons.main}} />
+            </IconButton>
+          </Box>
         </Box>
 
         <MuiLink component={RouterLink} underline='none' color="#000000" to={PRODUCT_ROUTE(product.id)} sx={{display: "block", height: "170px", textAlign: "center", position: "relative"}}>
@@ -73,7 +73,6 @@ const CardWrapperSimpleForSlide = ({ product }) => {
           </LazyLoad>
         </MuiLink>
 
-        {/* <Box sx={{paddingTop: matches800 ? "10px" : "20px"}}> */}
         <Box sx={{}}>
 
           <MuiLink component={RouterLink} underline='none' color="#000000" to={PRODUCT_ROUTE(product.id)}>
@@ -103,15 +102,26 @@ const CardWrapperSimpleForSlide = ({ product }) => {
             </Tooltip>
           </MuiLink>
 
-          <Typography color="text.secondary" sx={{fontSize: "14px", textDecoration: "line-through"}}>
-              {product.price}₴
-          </Typography>
 
-          <Box sx={{display: "flex", justifyContent: "space-between"}}>
-              <Typography color="text.secondary" sx={{fontSize: "24px", color: "red"}}>
-                  {product.discountedPrice}₴
+          {product.discountedPrice ? (
+            <Fragment>
+              <Typography color="text.secondary" sx={{fontSize: "14px", textDecoration: "line-through"}}>
+                  {product.price}₴
               </Typography>
-          </Box>
+
+              <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                  <Typography color="text.secondary" sx={{fontSize: "24px", color: "red"}}>
+                    {product.discountedPrice}₴
+                  </Typography>
+              </Box>
+            </Fragment>
+          ) : (
+              <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                  <Typography color="text.secondary" sx={{fontSize: "24px", color: "red"}}>
+                    {product.price}₴
+                  </Typography>
+              </Box>
+          )}
         </Box>
       </Box>
       

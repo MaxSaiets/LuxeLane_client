@@ -10,7 +10,7 @@ const ContentBlockTitleSimple = ({ sectionTitle, sectionLink, spesialTitle }) =>
         <Typography 
             variant={matches600 ? "h6" : "h5"} 
             color="text.mainPageBlocksTitles" 
-            sx={{ display: "flex", gap: matches600 ? "5px" : "10px", fontWeight: "500", color: "#000" }}
+            sx={{ display: "flex", gap: matches600 ? "5px" : "10px", fontWeight: "500", color: theme.palette.text.mainPageBlocksTitles, marginBottom: "10px" }}
         >
             {sectionTitle}
             

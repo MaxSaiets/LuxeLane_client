@@ -21,27 +21,39 @@ import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 
-import { ADMIN_ALLUSERS_ROUTE, ADMIN_CATEGORIES_ROUTE, ADMIN_BRANDS_ROUTE, ADMIN_TYPES_ROUTE, ADMIN_PRODUCTS_ROUTE } from "../../../utils/consts";
+import { ADMIN_ALLUSERS_ROUTE, ADMIN_CATEGORIES_ROUTE, ADMIN_BRANDS_ROUTE, ADMIN_TYPES_ROUTE, ADMIN_PRODUCTS_ROUTE, USERPROFILE_ROUTE } from "../../../utils/consts";
 
-const Item = ({ title, to, icon, selected, setSelected }) => {
-
+const Item = ({ title, to, icon, selected, setSelected, isExternal }) => {
+  if (isExternal) {
     return (
-          <MuiLink component={RouterLink} underline='none' color="#000000" to={to}>
-            <MenuItem
-                active={selected === title}
-                onClick={() => setSelected(title)}
-                icon={icon}
-            >
-                <Typography>{title}</Typography>
-            </MenuItem>
-        </MuiLink>
+      <MuiLink href={to} underline="none" color="#000000" target="_blank" rel="noopener noreferrer">
+        <MenuItem
+          active={selected === title}
+          onClick={() => setSelected(title)}
+          icon={icon}
+        >
+          <Typography>{title}</Typography>
+        </MenuItem>
+      </MuiLink>
     );
+  }
+
+  return (
+    <MuiLink component={RouterLink} underline="none" color="#000000" to={to}>
+      <MenuItem
+        active={selected === title}
+        onClick={() => setSelected(title)}
+        icon={icon}
+      >
+        <Typography>{title}</Typography>
+      </MenuItem>
+    </MuiLink>
+  );
 };
 
 const AdminSideBar = ({ isCollapsed, setIsCollapsed }) => {
   const {userStore} = useContext(RootStoreContext);
 
-  // const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
 
   return (
@@ -102,7 +114,7 @@ const AdminSideBar = ({ isCollapsed, setIsCollapsed }) => {
           <Box >
             <Item
               title="Dashboard"
-              to="/"
+              to={USERPROFILE_ROUTE}
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -132,7 +144,8 @@ const AdminSideBar = ({ isCollapsed, setIsCollapsed }) => {
             />
             <Item
               title="Contacts Information"
-              to="/contacts"
+              to="https://maxsaiets.github.io/Portfolio/"
+              isExternal={true}
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

@@ -109,8 +109,8 @@ const CatalogMenuModal = ({ open, onClose }) => {
                                             alignItems: "center"
                                         }}
                                     >
-                                        <ArrowBackIcon sx={{ marginRight: "5px", fontSize: "20px" }} />
-                                        <Typography variant="body1" sx={{ textAlign: "left" }}>Повернутися до вибору категорії</Typography>
+                                        <ArrowBackIcon sx={{ marginRight: "5px", fontSize: "20px", color: theme.palette.text.catalogList }} />
+                                        <Typography variant="body1" sx={{ textAlign: "left", color: theme.palette.text.catalogList }}>Повернутися до вибору категорії</Typography>
                                     </Button>
                                     <SubCatalogList category={selectedCategoryForSubCategories} closeModal={closeAllModals} />
                                 </Grid>
