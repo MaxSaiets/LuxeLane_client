@@ -20,11 +20,12 @@ import AdminPanel from "./pages/AdminPanel";
 
 import LoadingScreen from "./components/LoadingScreen/LoadingScreen";
 
+import { fetchFilteredProducts } from "./http/productApi";
+
 const App = observer(() => {
   const [theme, colorMode, globalStyles] = useMode();
 
   const { userStore, basketStore, catalogStore, recentryViewedStore, favoritesStore } = useContext(RootStoreContext);
-
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -35,13 +36,17 @@ const App = observer(() => {
     
     fetchInitialData();
 
-  }, [userStore]);
+  }, []);
 
   useEffect(() => {
+    const fetchAddtionalData = async () => {
+      await basketStore.fetchUserBasket();
+      await favoritesStore.fetchUserFavorites({fetchAllProducts: true});
+      await recentryViewedStore.fetchRecentlyViewedProducts({fetchAllProducts: true}); //default 20, productDataCount = 20
+    }
+
     if (userStore.isAuth) {
-      basketStore.fetchUserBasket();
-      favoritesStore.fetchUserFavorites();
-      recentryViewedStore.fetchRecentlyViewedProducts({ allInformation: true });
+      fetchAddtionalData();  
     }
   }, [userStore.isAuth]);
 
@@ -79,7 +84,7 @@ const App = observer(() => {
           </div>
         </ThemeProvider>
       </ColorModeContext.Provider>
-    </HashRouter>     
+    </HashRouter>
   );
 });
 

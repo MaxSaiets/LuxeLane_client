@@ -112,7 +112,7 @@ const AuthPopup = ({open, setOpen}) => {
             <Box sx={{display: "flex", flexDirection: "row"}}>
                 <Box sx={{maxWidth: "350px"}}>
                     <DialogContent>
-                        <DialogContentText>
+                        <DialogContentText sx={{color: "text.main"}}>
                             {logOrReg ? "To have all the functionality, please log in to your account" : 
                                         "To have all the functionality, please register your account"}
                         </DialogContentText>
@@ -126,6 +126,7 @@ const AuthPopup = ({open, setOpen}) => {
                             type="email"
                             fullWidth
                             variant="standard"
+                            sx={{color: "text.main"}}
                         />
                         {/* PHONE NUMBER */}
                         {/* {logOrReg ? null
@@ -151,6 +152,7 @@ const AuthPopup = ({open, setOpen}) => {
                             type="password"
                             fullWidth
                             variant="standard"
+                            sx={{color: "text.main"}}
                         />
                     </DialogContent>
 
@@ -161,23 +163,17 @@ const AuthPopup = ({open, setOpen}) => {
                             </Box>
                         )}      
 
-                        {logOrReg ? (
-                            <Box sx={{width: "100%", height: "100%", display: "flex", flexDirection: "column", gap: "5px", justifyContent: "center", alignItems: "center"}}>
-                                <Button type="submit">Увійти</Button>
-                                <Button onClick={handleLogOrReg}>Зареєструватися</Button>
-                            </Box>
-                        ) : (
-                            <Box sx={{width: "100%", height: "100%", display: "flex", flexDirection: "column", gap: "5px", justifyContent: "center", alignItems: "center"}}>
-                                <Button type="submit">Зареєструватися</Button>
-                                <Button onClick={handleLogOrReg}>Увійти</Button>
-                            </Box>
-                        )}
+                        
+                        <Box sx={{width: "100%", height: "100%", display: "flex", flexDirection: "column", gap: "5px", justifyContent: "center", alignItems: "center"}}>
+                            <Button type="submit" sx={{color: "text.main"}}>{logOrReg ? "Увійти" : "Зареєструватися"}</Button>
+                            <Button onClick={handleLogOrReg} sx={{color: "text.main"}}>{logOrReg ? "Зареєструватися" : "Увійти"}</Button>
+                        </Box>
                     </DialogActions>
                 </Box>
 
                 <Box sx={{width: "200px", display: "flex", flexDirection: "column", justifyContent: "space-between", textAlign: "right"}}>
                     <DialogContent sx={{display: "flex", flexDirection: "column", gap: "10px"}}>
-                        <DialogContentText>
+                        <DialogContentText sx={{color: "text.main"}}>
                             {logOrReg ? "Log in with" : 
                                         "Register with"}
                         </DialogContentText>
@@ -210,7 +206,7 @@ const AuthPopup = ({open, setOpen}) => {
                     </DialogContent>
 
                     <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button onClick={handleClose} sx={{color: "text.main"}}>Cancel</Button>
                     </DialogActions>
                 </Box>
             </Box>

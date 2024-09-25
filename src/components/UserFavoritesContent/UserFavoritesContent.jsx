@@ -24,7 +24,7 @@ const BasketContent = observer(() => {
             </Box>
             )}
 
-            <Box sx={{ width: isSmallScreen ? "100%" : "calc(100% - 240px)", padding: matches900 ? "10px 15px" : "0px 30px" }}>
+            <Box sx={{ width: isSmallScreen ? "100%" : "calc(100% - 240px)", padding: matches900 ? "10px 15px" : "10px 30px" }}>
                 <ProductsListForUserFavorites />
             </Box>
         </Box>

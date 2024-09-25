@@ -76,3 +76,16 @@ export const getProductsNameId = async () => {
         throw error;
     }
 }
+
+export const fetchFilteredProducts = async ({ category, subcategory, type, brand, productsCount, minPrice, maxPrice }) => {
+    try {
+        const response = await $host.get(`api/products/getFilteredProducts`, {
+            params: { category, subcategory, type, brand, productsCount, minPrice, maxPrice }
+        });
+        
+        return response.data.products;
+    } catch (error) {
+        console.error("Error fetching recently viewed products: ", error.message);
+        throw error;
+    }
+};

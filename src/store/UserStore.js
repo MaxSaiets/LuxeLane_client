@@ -60,9 +60,9 @@ export default class UserStore {
             const userFireBase = await loginUserWithEmailAndPassFireBase(email, password);
 
             localStorage.setItem('token', userFireBase.token);
-
+            
             const response = await getUserFromDatabase(userFireBase.token);
-
+            
             this.setUser(response.user);
             this.setIsAuth(true);
         } catch (error) {
@@ -84,6 +84,8 @@ export default class UserStore {
     async getUserFromDB(email, token, userData){
         try {
             const response = await getOrsaveUserInDatabase(email, token, userData);
+            
+            localStorage.setItem('token', token);
 
             this.setUser(response.user);
             this.setIsAuth(true);

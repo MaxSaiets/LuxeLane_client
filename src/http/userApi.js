@@ -11,14 +11,9 @@ export const getUserFromDatabase = async () => {
     
     return data;
 }
-// export const logout = async () => {
-//     const {data} = await $api.post('api/user/logout')
-
-//     return data
-// }
 
 export const check = async () => {
     const {data} = await $authHost.get('api/user/auth')
-    localStorage.setItem('token', data.token) // помещаєм token в localStorage
+    localStorage.setItem('token', data.token)
     return jwt_decode(data.token)
 }

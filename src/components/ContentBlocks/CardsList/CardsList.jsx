@@ -4,11 +4,11 @@ import CardWrapperSimle from "../CardWrapperSimple/CardWrapperSimple";
 
 import { useTheme, useMediaQuery } from '@mui/material';
 
-import { USERFAVORITES_ROUTE } from "../../../utils/consts";
+import { USERFAVORITES_ROUTE, BASKET_ROUTE } from "../../../utils/consts";
 import { useNavigate } from "react-router-dom";
 
 
-const CardsList = ({itemsCount, data, showAllItems = false}) => {
+const CardsList = ({itemsCount, data, navigateTo, showNavigateBtn = false, showAllItems = false}) => {
     const navigate = useNavigate();
     const [showItems, setShowAllItems] = useState(showAllItems);
 
@@ -39,7 +39,6 @@ const CardsList = ({itemsCount, data, showAllItems = false}) => {
 
     const [visibleItemCount, setVisibleItemCount] = useState(itemsCount);
 
-
     const visibleItems = showItems ? data : data.slice(0, visibleItemCount)
 
     const itemValue = (100 - 4) / itemsCount;
@@ -47,8 +46,14 @@ const CardsList = ({itemsCount, data, showAllItems = false}) => {
     const gapItemsPreValue = `calc(4% / ${itemsCount})`;
     const gapItemsValue = `calc((4% + ${gapItemsPreValue}) / ${itemsCount})`;
 
-    const handleUserFavoritesClick = () => {
-      navigate(USERFAVORITES_ROUTE);
+    const handleShowAllProductsClick = () => {
+      let navigateRoute;
+      if(navigateTo === "favorites") {
+        navigateRoute = USERFAVORITES_ROUTE
+      } else if(navigateTo === "basket") {
+        navigateRoute = BASKET_ROUTE
+      }
+      navigate(navigateRoute);
     };
 
     const handleShowMoreClick = () => {
@@ -59,21 +64,24 @@ const CardsList = ({itemsCount, data, showAllItems = false}) => {
         <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", rowGap: "10px", width: "100%"}}>
           {visibleItems.map((item, index) => (
             <Box key={index} sx={{ flex: `0 0 ${itemWidth}`, boxSizing: "border-box", marginRight: index % itemsCount === itemsCount - 1 ? "0px" : gapItemsValue }}>
-                <CardWrapperSimle product={item} />
+              <CardWrapperSimle product={item} />
             </Box>
           ))}
 
           {!showAllItems && (
             <Box sx={{ width: "100%", justifyContent: "right", display: "flex", flexDirection: matches450 ? "column" : "row", gap: "10px" }}>
-              <Button
-                variant="outlined"
-                color="info"
-                onClick={handleUserFavoritesClick}
-                size="small"
-                sx={{ width: matches450 ? "100%" : matches600 ? "50%" : "auto" }}
-              >
-                Показати всі продукти
-              </Button>
+              
+              {showNavigateBtn && (
+                <Button
+                  variant="outlined"
+                  color="info"
+                  onClick={handleShowAllProductsClick}
+                  size="small"
+                  sx={{ width: matches450 ? "100%" : matches600 ? "50%" : "auto" }}
+                >
+                  Показати всі продукти
+                </Button>
+              )}
 
               {!showItems && data.length > visibleItemCount && (
                 <Button

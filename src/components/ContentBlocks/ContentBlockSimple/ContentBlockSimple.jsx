@@ -6,7 +6,7 @@ import ContentBlockTitleSimple from "../ContentBlockTitleSimple/ContentBlockTitl
 
 import { useTheme, useMediaQuery } from '@mui/material';
 
-const ContentBlockSimple = ({itemsCount, sectionTitle, data, style}) => {
+const ContentBlockSimple = ({itemsCount, sectionTitle, data, style, navigateTo, showNavigateBtn, showAllItems = false}) => {
     const theme = useTheme();
     const matches600 = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -16,7 +16,7 @@ const ContentBlockSimple = ({itemsCount, sectionTitle, data, style}) => {
             <ContentBlockTitleSimple sectionTitle={sectionTitle} />
 
             <Box sx={{width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap", position: "relative"}}>
-                <CardsList itemsCount={itemsCount} data={data} showAllItems={true} />
+                <CardsList itemsCount={itemsCount} data={data} showAllItems={showAllItems} navigateTo={navigateTo} showNavigateBtn={showNavigateBtn} />
             </Box>
         </Box>
     );

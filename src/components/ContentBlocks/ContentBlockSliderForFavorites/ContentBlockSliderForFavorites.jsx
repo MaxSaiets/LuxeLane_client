@@ -24,7 +24,6 @@ const ContentBlockSliderForFavorites = observer(({itemsCount, sectionTitle, data
     
     // для перерендера компонента
     useEffect(() => {}, [favoritesStore.favoriteListCount]);
-    
 
     const ITEM_HEIGHT = 48;
 
@@ -33,6 +32,7 @@ const ContentBlockSliderForFavorites = observer(({itemsCount, sectionTitle, data
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -92,7 +92,7 @@ const ContentBlockSliderForFavorites = observer(({itemsCount, sectionTitle, data
             </Box>
 
             <Box sx={{width: "100%", display: "flex", flexDirection: "row", flexWrap: "wrap", position: "relative"}}>
-                <CardsList itemsCount={itemsCount} data={data} showAllItems={showAllItems} />
+                <CardsList itemsCount={itemsCount} data={data} showAllItems={showAllItems} showNavigateBtn={true} navigateTo={"favorites"} />
             </Box>
         </Box>
     );

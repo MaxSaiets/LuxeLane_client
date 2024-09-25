@@ -11,10 +11,8 @@ import { useTheme, useMediaQuery } from '@mui/material';
 const ContentBlockSlider = observer(({carouserSettings, sectionTitle, data}) => {
     const theme = useTheme();
     const matches600 = useMediaQuery(theme.breakpoints.down('sm'));
-
     return (
         <Box sx={{margin: matches600 ? "15px 0" : "30px 0", display: "flex", flexDirection: "column", gap: matches600 ? "10px" : "20px", height: "auto"}}>
-
             <ContentBlockTitleSimple sectionTitle={sectionTitle} />
 
             <CardsListForSlide carouserSettings={carouserSettings} data={data} />

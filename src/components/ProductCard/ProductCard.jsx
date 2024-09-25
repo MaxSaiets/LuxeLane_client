@@ -109,6 +109,9 @@
                         boxShadow: !matches900 && isHovered ? "5px 5px 15px rgba(0,0,0,0.3)" : "none",
                         padding: "10px",
                         zIndex: !matches900 && isHovered ? 100 : 0,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
                     }}
                 >
                     <CardContent sx={{padding: 0}}>

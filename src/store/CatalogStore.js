@@ -6,6 +6,7 @@ export default class CatalogStore {
     constructor(){
         this._catalogСategoriesData = []
         this._catalogSubСategories = []
+        this._isLoaded = false
 
         makeAutoObservable(this)
     }
@@ -18,6 +19,10 @@ export default class CatalogStore {
         this._catalogSubСategories = catalogSubСategories; 
     }
 
+    setIsCatalogLoaded(isLoaded) {
+        this._isLoaded = isLoaded;
+    }
+
     get catalogСategories(){
         return this._catalogСategoriesData;
     }
@@ -26,17 +31,24 @@ export default class CatalogStore {
         return this._catalogSubСategories;
     }
 
+    get isLoaded() {
+        return this._isLoaded;
+    }
+
     clearStore() {
         this._catalogСategoriesData = [];
         this._catalogSubСategories = [];
+        this._isLoaded = false; 
     }
 
     async getCatalogCategoriesData(){
         try {
             const response = await fetchCategoriesData();
-
             this.setCatalogСategories(response);
+
+            this.setIsCatalogLoaded(true); 
         } catch (error){
+            this.setIsCatalogLoaded(false);
             throw error
         }
     } 
@@ -63,5 +75,19 @@ export default class CatalogStore {
     async getCategoryDataByName(categoryName) {
         const category = this._catalogСategoriesData.find(category => category.name === categoryName);
         return category;
+    }
+
+    getRandomDataName(type) {
+        if (type === "category" && this._catalogСategoriesData.length > 0) {
+            const randomIndex = Math.floor(Math.random() * this._catalogСategoriesData.length);
+            return this._catalogСategoriesData[randomIndex].categoryName;
+        } 
+        
+        if (type === "subCategory" && this._catalogСategoriesData.length > 0) {
+            const randomIndex = Math.floor(Math.random() * this._catalogСategoriesData.length);
+            return this._catalogСategoriesData[randomIndex].subCategories.subCategoryName;
+        }
+
+        return null;
     }
 }

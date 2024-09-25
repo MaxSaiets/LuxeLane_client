@@ -19,6 +19,8 @@ import { RootStoreContext } from "../../store/RootStoreProvider";
 
 import { useTheme, useMediaQuery } from '@mui/material';
 
+import { fetchFilteredProducts } from "../../http/productApi";
+
 const data3Video = [
     {url: "https://www.youtube.com/watch?v=e7U1YZNgwnY"},
     {url: "https://www.youtube.com/watch?v=mX_8p7NaibQ"},
@@ -38,9 +40,17 @@ const MainContent = observer(() => {
     const matches600 = useMediaQuery(theme.breakpoints.down('sm'));
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("leftBar"));
 
-    const { userStore, recentryViewedStore, favoritesStore } = useContext(RootStoreContext);
+    const { userStore, recentryViewedStore, favoritesStore, catalogStore } = useContext(RootStoreContext);
 
     const [dataForBlockSlider, setDataForBlockSlider] = useState([]);
+
+    const [dataResult, setDataResult] = useState([]);
+
+    useEffect(() => {
+        if(catalogStore.isLoaded) {
+            fetchFilteredProducts({productsCount: 40, category: catalogStore.getRandomDataName("category")}).then(data => setDataResult(data));;
+        }
+    }, [catalogStore.isLoaded]);
 
     useEffect(() => {
         fetchProductsForAdsBlock({itemsCount: 14}).then(data => setDataForBlockSlider(data));
@@ -87,6 +97,16 @@ const MainContent = observer(() => {
                         />  
                     </Box>
                 )}
+
+                {userStore.isAuth && favoritesStore.hasUserFavoritesList && (
+                    <Box sx={{}}>
+                        <ContentBlockSliderForFavorites
+                            sectionTitle={"Улюблені"}
+                            data={favoritesStore.userFavoriteList}
+                        /> 
+                    </Box>
+                )}
+
                 {userStore.isAuth && recentryViewedStore.hasRecentlyViewedProducts && (
                     <Box sx={{}}>
                         <ContentBlockSlider
@@ -96,23 +116,19 @@ const MainContent = observer(() => {
                     </Box>
                 )}
 
-                {userStore.isAuth && favoritesStore.hasUserFavoritesList && (
-                    <Box sx={{}}>
-                        <ContentBlockSliderForFavorites
-                            sectionTitle={"Улюблені"}
-                            data={favoritesStore.userFavoriteList}
-                        /> 
-                    </Box>
-                )} 
-                    
-                {/* {userStore.isAuth && recentryViewedStore.hasRecentlyViewedProducts && (
-                    <Box sx={{}}>
-                        <ContentBlockSlider
-                            sectionTitle={"Улюблені"}
-                            data={favoritesStore.userFavoriteList}
-                        />  
-                    </Box>
-                )} */}
+                <Box sx={{}}>
+                    <ContentBlockSlider
+                        sectionTitle={"Приклад виводу товарів"}
+                        data={dataResult}
+                    /> 
+                </Box>
+
+                <Box sx={{}}>
+                    <ContentBlockSimple
+                        sectionTitle={"Приклад виводу товарів"}
+                        data={dataResult}
+                    /> 
+                </Box>
 
                 <Box sx={{}}>
                     <ContentBlockVideo sectionTitle={"Нові відео на каналі"} chanelTitle={"LuxeLane"} sectionLink={"https://www.youtube.com"} data={data3Video} />  

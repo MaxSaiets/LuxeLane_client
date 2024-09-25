@@ -20,7 +20,6 @@ const CardWrapperSimple = ({ product }) => {
   const { userStore, favoritesStore } = useContext(RootStoreContext);
   const [isFavorite, setIsFavorite] = useState();
 
-  const matches1200 = useMediaQuery(theme.breakpoints.down('lg'));
   const matches800 = useMediaQuery(theme.breakpoints.down('md'));
 
   const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);

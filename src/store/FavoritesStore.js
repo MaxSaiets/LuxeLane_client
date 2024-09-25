@@ -44,10 +44,10 @@ export default class FavoritesStore {
         this.setUserFavorites([]);
         this.setLoading(false);
     }
-    async fetchUserFavorites() {
+    async fetchUserFavorites({ productDataCount, fetchAllProducts }) {
         this.setLoading(true);
         try {
-            const favoritesList = await fetchUserFavorites();
+            const favoritesList = await fetchUserFavorites({ productDataCount, fetchAllProducts });
             this.setUserFavorites(favoritesList);
         } catch (error) {
             console.error("Error fetching user favorites list: ", error.message);

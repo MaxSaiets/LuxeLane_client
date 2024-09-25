@@ -1,8 +1,11 @@
 import { $authHost } from "./index";
 
-export const fetchUserFavorites = async () => {
+export const fetchUserFavorites = async ({productDataCount = 20, fetchAllProducts = false}) => {
     try {
-        const response = await $authHost.get('/api/favorites/fetchUserFavorites');
+        const response = await $authHost.get('/api/favorites/fetchUserFavorites', {
+            params: { productDataCount, fetchAllProducts }
+        });
+
         return response.data.favorite_items;
     } catch (error) {
         console.error('Error fetching user favorites:', error);

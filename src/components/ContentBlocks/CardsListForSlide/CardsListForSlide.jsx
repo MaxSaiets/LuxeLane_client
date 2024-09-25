@@ -5,7 +5,6 @@ import Slider from "react-slick";
 import "./SliderSlickForSlide.css"
 
 const CardsListForSlide = ({carouserSettings, data}) => {
-    
     function SampleNextArrow(props) {
         const { className, style, onClick } = props;
         return (
@@ -31,10 +30,11 @@ const CardsListForSlide = ({carouserSettings, data}) => {
         ...carouserSettings,
         dots: false,
         speed: 500,
-        infinite: true,
+        infinite: data.length > 1,
         swipeToSlide: true,
         nextArrow: <SampleNextArrow />,
         prevArrow: <SamplePrevArrow />,
+        arrows: data.length > 1,
         customPaging: function (i) {
             return <div className="dot"></div>;
         },

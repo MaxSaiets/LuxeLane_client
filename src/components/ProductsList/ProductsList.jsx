@@ -37,7 +37,7 @@ const ProductsList = observer( ({ name, page, pageCount, setPage, products, fetc
                 {products.length > 0 ? (
                     products.map((product) => (
                         <ProductCard 
-                            key={product.id} 
+                            key={product.id}
                             product={product}
                             onAddToBasket={handleAddToBasket}
                             onRemoveFromBasket={handleRemoveFromBasket}

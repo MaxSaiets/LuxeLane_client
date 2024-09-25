@@ -51,10 +51,13 @@ export default class RecentlyViewedStore {
         }
     }
 
-    async fetchRecentlyViewedProducts({allInformation}) {
+    async fetchRecentlyViewedProducts({ productDataCount, fetchAllProducts }) {
         this.setLoading(true);
         try {
-            const products = await fetchRecentlyViewedProducts({ allInformation });
+            const products = await fetchRecentlyViewedProducts({
+                productDataCount,
+                fetchAllProducts
+            });
 
             this.setRecentlyViewedProducts(products);
         } catch (error) {
