@@ -39,14 +39,10 @@ const App = observer(() => {
   }, []);
 
   useEffect(() => {
-    const fetchAddtionalData = async () => {
-      await basketStore.fetchUserBasket();
-      await favoritesStore.fetchUserFavorites({fetchAllProducts: true});
-      await recentryViewedStore.fetchRecentlyViewedProducts({fetchAllProducts: true}); //default 20, productDataCount = 20
-    }
-
     if (userStore.isAuth) {
-      fetchAddtionalData();  
+      basketStore.fetchUserBasket();
+      favoritesStore.fetchUserFavorites({fetchAllProducts: true});
+      recentryViewedStore.fetchRecentlyViewedProducts({fetchAllProducts: true}); //default 20, productDataCount = 20
     }
   }, [userStore.isAuth]);
 

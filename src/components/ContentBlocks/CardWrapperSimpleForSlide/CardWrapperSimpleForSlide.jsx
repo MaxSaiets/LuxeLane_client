@@ -66,7 +66,7 @@ const CardWrapperSimpleForSlide = ({ product }) => {
         <MuiLink component={RouterLink} underline='none' color="#000000" to={PRODUCT_ROUTE(product.id)} sx={{display: "block", height: "170px", textAlign: "center", position: "relative"}}>
           <LazyLoad once>
             <img
-              src={product?.images[0]}
+              src={product?.images?.[0]}
               alt={product.title}
               style={{ objectFit: "contain", maxHeight: "170px", maxWidth: "100%", paddingTop: "5px", margin: "0 auto", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)"}}
             />
