@@ -83,7 +83,7 @@ const MainContent = observer(() => {
                 {dataForBlockSlider.length > 0 && (
                     <Box sx={{}}>
                         <ContentBlockSlider 
-                            sectionTitle={"Pеклама"} 
+                            sectionTitle={"Block with advertising"} 
                             data={dataForBlockSlider}  
                         />  
                     </Box>
@@ -92,7 +92,7 @@ const MainContent = observer(() => {
                 {userStore.isAuth && recentryViewedStore.hasRecentlyViewedProducts && (
                     <Box sx={{}}>
                         <ContentBlockSliderForFavorites
-                            sectionTitle={"Переглянуті товари"}
+                            sectionTitle={"Reviewed products"}
                             data={recentryViewedStore.recentlyViewedProducts}
                         />  
                     </Box>
@@ -101,7 +101,7 @@ const MainContent = observer(() => {
                 {userStore.isAuth && favoritesStore.hasUserFavoritesList && (
                     <Box sx={{}}>
                         <ContentBlockSliderForFavorites
-                            sectionTitle={"Улюблені"}
+                            sectionTitle={"Favorites products"}
                             data={favoritesStore.userFavoriteList}
                         /> 
                     </Box>
@@ -110,7 +110,7 @@ const MainContent = observer(() => {
                 {userStore.isAuth && recentryViewedStore.hasRecentlyViewedProducts && (
                     <Box sx={{}}>
                         <ContentBlockSlider
-                            sectionTitle={"Переглянуті товари"}
+                            sectionTitle={"Reviewed products"}
                             data={recentryViewedStore.recentlyViewedProducts}
                         />  
                     </Box>
@@ -118,20 +118,20 @@ const MainContent = observer(() => {
 
                 <Box sx={{}}>
                     <ContentBlockSlider
-                        sectionTitle={"Приклад виводу товарів"}
+                        sectionTitle={"An example of output of goods of a certain category"}
                         data={dataResult}
                     /> 
                 </Box>
 
                 <Box sx={{}}>
                     <ContentBlockSimple
-                        sectionTitle={"Приклад виводу товарів"}
+                        sectionTitle={"An example of output of goods of a certain category"}
                         data={dataResult}
                     /> 
                 </Box>
 
                 <Box sx={{}}>
-                    <ContentBlockVideo sectionTitle={"Нові відео на каналі"} chanelTitle={"LuxeLane"} sectionLink={"https://www.youtube.com"} data={data3Video} />  
+                    <ContentBlockVideo sectionTitle={"New videos on the channel"} chanelTitle={"LuxeLane"} sectionLink={"https://www.youtube.com"} data={data3Video} />  
                 </Box>
 
             </Box>

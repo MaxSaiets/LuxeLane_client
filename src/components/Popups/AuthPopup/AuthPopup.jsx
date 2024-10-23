@@ -165,8 +165,8 @@ const AuthPopup = ({open, setOpen}) => {
 
                         
                         <Box sx={{width: "100%", height: "100%", display: "flex", flexDirection: "column", gap: "5px", justifyContent: "center", alignItems: "center"}}>
-                            <Button type="submit" sx={{color: "text.main"}}>{logOrReg ? "Увійти" : "Зареєструватися"}</Button>
-                            <Button onClick={handleLogOrReg} sx={{color: "text.main"}}>{logOrReg ? "Зареєструватися" : "Увійти"}</Button>
+                            <Button type="submit" sx={{color: "text.main"}}>{logOrReg ? "Log in" : "Sign up"}</Button>
+                            <Button onClick={handleLogOrReg} sx={{color: "text.main"}}>{logOrReg ? "Sign up" : "Log in"}</Button>
                         </Box>
                     </DialogActions>
                 </Box>

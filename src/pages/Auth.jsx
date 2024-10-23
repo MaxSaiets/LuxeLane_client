@@ -43,12 +43,12 @@ const Auth = observer(() => {
                         {isLogin ? (
                             <>
                                 <a href={REGISTRATION_ROUTE} style={{width: 'auto', border: '1px solid', padding: 5, zIndex: 100, textDecoration: "none", color: 'inherit'}}>Не маєте аккаунт?</a>
-                                <button onClick={authClick} style={{width: 'auto'}}>Увійти</button>
+                                <button onClick={authClick} style={{width: 'auto'}}>Log in</button>
                             </>
                             ) : (
                             <>
                                 <a href={LOGIN_ROUTE} style={{width: 'auto', border: '1px solid', padding: 5, zIndex: 100, textDecoration: "none", color: 'inherit'}}>Уже маєте аккаунт?</a>
-                                <button onClick={authClick} style={{width: 'auto'}}>Зареєструватися</button>
+                                <button onClick={authClick} style={{width: 'auto'}}>Sign up</button>
                             </>
                         )}
                     </div>

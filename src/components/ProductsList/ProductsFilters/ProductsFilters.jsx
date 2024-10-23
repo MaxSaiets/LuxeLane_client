@@ -39,7 +39,7 @@ const ProductsFilters = observer(({selectedFilters, handleAddFilterOption, handl
         <Box sx={{ "& > *": { borderBottom: "1px solid #000", padding: "12px"}}}>
             <Box sx={{display: "flex", flexDirection: "column", gap: "15px"}}>
 
-                <Typography>Ціна:</Typography>
+                <Typography>Price:</Typography>
 
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 2 }}>
                     <Box sx={{ display: "flex", gap: "5px", alignItems: "center"}}>
@@ -95,7 +95,7 @@ const ProductsFilters = observer(({selectedFilters, handleAddFilterOption, handl
             </Box>
 
             <Box>
-                <Typography>Бренд:</Typography>
+                <Typography>Brand:</Typography>
                 
                 <Grid container direction="column">
                     {selectedFilters.brands && selectedFilters.brands.map((brand, index) => {

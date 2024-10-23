@@ -56,7 +56,7 @@ const CardsListVideo = ({itemsCount, data}) => {
                     onClick={() => setShowAllItems(true)}
                     size="small"
                 >
-                    Показати більше відео
+                    Show more videos
                 </Button>
             )}
         </Box>

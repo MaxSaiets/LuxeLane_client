@@ -79,7 +79,7 @@ const CardsList = ({itemsCount, data, navigateTo, showNavigateBtn = false, showA
                   size="small"
                   sx={{ width: matches450 ? "100%" : matches600 ? "50%" : "auto" }}
                 >
-                  Показати всі продукти
+                  Show all products
                 </Button>
               )}
 
@@ -91,7 +91,7 @@ const CardsList = ({itemsCount, data, navigateTo, showNavigateBtn = false, showA
                   size="small"
                   sx={{ width: matches450 ? "100%" : matches600 ? "50%" : "auto" }}
                 >
-                  Показати більше продуктів
+                  Show more products
                 </Button>
               )}
             </Box>

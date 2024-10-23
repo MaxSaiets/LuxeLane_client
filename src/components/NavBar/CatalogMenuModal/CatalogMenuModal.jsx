@@ -12,7 +12,7 @@ const CatalogMenuModal = ({ open, onClose }) => {
 
     const [supModalOpen, setSupModalOpen] = useState(false);
     const [selectedCategoryForSubCategories, setSelectedCategoryForSubCategories] = useState();
-    const [title, setTitle] = useState("КАТАЛОГ ТОВАРІВ");
+    const [title, setTitle] = useState("CATALOG");
 
     const handleCategoryClick = (category) => {
         setSupModalOpen(true);
@@ -57,7 +57,7 @@ const CatalogMenuModal = ({ open, onClose }) => {
             }}>
                 <Grid container direction={matches900 ? "column" : "row"}>
                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: "8px 0px" }}>
-                        <Typography variant="h6" sx={{ textAlign: "left" }}>КАТАЛОГ ТОВАРІВ</Typography>                        
+                        <Typography variant="h6" sx={{ textAlign: "left" }}>CATALOG</Typography>                        
                         <IconButton onClick={closeAllModals} sx={{ color: "text.primary" }}>
                             <CloseIcon />
                         </IconButton>

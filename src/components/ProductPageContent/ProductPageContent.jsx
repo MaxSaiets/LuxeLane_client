@@ -114,7 +114,7 @@ const ProductPageContent = observer(() => {
                     {productData.title}
                 </Typography>
                 <Typography variant="h6" component="div" gutterBottom>
-                    Ціна: {productData.price} грн
+                    Price: {productData.price} ₴
                 </Typography>
     
                 <Box sx={{ display: "flex", width: "100%", flexDirection: matches400 ? "column" : "row", gap: "15px" }}>
@@ -126,7 +126,7 @@ const ProductPageContent = observer(() => {
                             flexGrow: 1,
                         }}
                     >
-                        {productData.isInBasket ? "Видалити з кошика" : "Додати до кошика"}
+                        {productData.isInBasket ? "Remove from basket" : "Add to basket"}
                     </Button>
     
                     <Button
@@ -137,7 +137,7 @@ const ProductPageContent = observer(() => {
                             flexGrow: 1,
                         }}
                     >
-                        {productData.isFavorite ? "Видалити з улюблених" : "Додати до улюблених"}
+                        {productData.isFavorite ? "Remove from basket" : "Add to basket"}
                     </Button>
                 </Box>
             </Box>
@@ -172,22 +172,22 @@ const ProductPageContent = observer(() => {
                 }}>
                     <MuiLink component={RouterLink} underline='none' color="#000000" to={"#product-description"}>
                         <Typography variant="body1" sx={{fontWeight: "500", color: theme.palette.text.main}} component="div">
-                            Усе про товар
+                            All about the product
                         </Typography>
                     </MuiLink>
                     <MuiLink component={RouterLink} underline='none' color="#000000" to={"/"}>
                         <Typography variant="body1" sx={{fontWeight: "500", color: theme.palette.text.main}} component="div">
-                            Характеристики
+                            Characteristics
                         </Typography>
                     </MuiLink>
                     <MuiLink component={RouterLink} underline='none' color="#000000" to={"/"}>
                         <Typography variant="body1" sx={{fontWeight: "500", color: theme.palette.text.main}} component="div">
-                            Відгуки
+                            Reviews
                         </Typography>
                     </MuiLink>
                     <MuiLink component={RouterLink} underline='none' color="#000000" to={"/"}>
                         <Typography variant="body1" sx={{fontWeight: "500", color: theme.palette.text.main}} component="div">
-                            Питання
+                            Question
                         </Typography>
                     </MuiLink>
                 </Box>

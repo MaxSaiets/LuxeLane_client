@@ -64,7 +64,7 @@ const ProductsListForBasket = observer(() => {
 
                 <Box sx={{width: "100%"}}>
                     <ContentBlockSlider 
-                        sectionTitle={"Pеклама"} 
+                        sectionTitle={"Block with advertising"} 
                         data={dataForBlockSlider}  
                     />  
                 </Box>

@@ -99,7 +99,7 @@ const CategoryExplorerContent = observer(() => {
 
                 <Box sx={{height: "auto"}}>
                     <ContentBlockSlider 
-                        sectionTitle={"Pеклама"} 
+                        sectionTitle={"Block with advertising"} 
                         data={dataForAdsBlockSlider}  
                     />  
                 </Box>

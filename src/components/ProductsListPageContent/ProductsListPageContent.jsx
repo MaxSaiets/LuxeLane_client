@@ -100,7 +100,7 @@ const ProductsListPageContent = observer(() => {
             </Grid>
 
             <Grid item xs={12} sx={(theme) => ({ padding: matches900 ? "8px" : "16px", display: "flex", flexDirection: "column", gap: "5px", borderBottom: "1px solid gray", position: "sticky", top: matches600 ? "54px" : "60px", zIndex: 1000, bgcolor: theme.palette.background.filterLeftBar })}>
-                <Typography fontSize={16}>Знайдено товарів: {productsCount}</Typography>
+                <Typography fontSize={16}>Products found: {productsCount}</Typography>
 
                 <Box sx={{display: "flex", gap: "10px", bgcolor: theme.palette.background.filterLeftBar}}>
 
