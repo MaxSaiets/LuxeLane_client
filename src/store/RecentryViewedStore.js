@@ -14,7 +14,7 @@ export default class RecentlyViewedStore {
     }
 
     setRecentlyViewedProducts(products) {
-        this._recentlyViewedProducts = products;
+        this._recentlyViewedProducts = Array.isArray(products) ? products : [];
     }
 
     get recentlyViewedProducts() {
@@ -26,7 +26,7 @@ export default class RecentlyViewedStore {
     }
     
     get hasRecentlyViewedProducts() {
-        return this._recentlyViewedProducts.length > 0;
+        return Array.isArray(this.recentlyViewedProducts) && this.recentlyViewedProducts.length > 0;
     }
 
     clearStore() {
