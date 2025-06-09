@@ -1,0 +1,139 @@
+
+import { makeAutoObservable } from "mobx";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+
+import { getOrsaveUserInDatabase, getUserFromDatabase, } from "../http/userApi";
+import { loginUserWithEmailAndPassFireBase, registerUserWithEmailAndPassFireBase } from "../utils/fireBase/authFireBaseService";
+
+export default class UserStore {
+    constructor(){
+        this.rootStore = null;
+        this._isAuth = false 
+        this._user = {}
+        this._isLoading = false
+
+        makeAutoObservable(this)
+    }
+
+    setIsAuth(bool){    
+        this._isAuth = bool  
+    }
+    setUser(user){
+        if (user) {
+            this._user = user;
+            localStorage.setItem("role", user.role);
+        } else {
+            this._user = {};
+            localStorage.removeItem("role");
+        }
+    }
+    setLoading(bool){
+        this._isLoading = bool  
+    }
+
+    setRootStore(rootStore) {
+        this.rootStore = rootStore;
+    }
+
+    get isAuth(){
+        return this._isAuth
+    }
+    get user(){
+        return this._user
+    }
+    get isLoading(){
+        return this._isLoading
+    }
+
+    clearStore() {
+        this._isAuth = false;
+        this._user = {};
+        this._isLoading = false;
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+    }
+
+    async login(email, password){
+        try {
+            const userFireBase = await loginUserWithEmailAndPassFireBase(email, password);
+
+            localStorage.setItem('token', userFireBase.token);
+            
+            const response = await getUserFromDatabase(userFireBase.token);
+            
+            this.setUser(response.user);
+            this.setIsAuth(true);
+        } catch (error) {
+            throw error;
+        }
+    }
+    async registration(email, password){
+        try {
+            const userFireBase = await registerUserWithEmailAndPassFireBase(email, password);
+
+            localStorage.setItem('token', userFireBase.token);
+
+            const response = await this.getUserFromDB(userFireBase.email, userFireBase.token);
+        } catch (error){
+            throw error;
+        }
+    } 
+
+    async getUserFromDB(email, token, userData){
+        try {
+            const response = await getOrsaveUserInDatabase(email, token, userData);
+            
+            localStorage.setItem('token', token);
+
+            this.setUser(response.user);
+            this.setIsAuth(true);
+        } catch (error){
+            throw error
+        }
+    } 
+
+    async logout(){
+        try {
+            const auth = getAuth();
+            signOut(auth)
+                .then(() => { 
+                    this.rootStore.clearAllStores();
+                }).catch((error) => {
+                    console.log(error.message)
+                }
+            );
+        } catch (e) {
+            console.log(e.response?.message);
+        }
+    }
+
+    async checkAuth(){
+        const auth = getAuth();
+    
+        try {
+            const userFireBase = await new Promise((resolve, reject) => {
+                const unsubscribe = onAuthStateChanged(auth, (user) => {
+                    unsubscribe();
+                    resolve(user);
+                }, reject);
+            });
+
+            if (userFireBase) {
+                const token = await userFireBase.getIdToken();
+
+                localStorage.setItem('token', token)
+
+                const response = await getUserFromDatabase();
+    
+                if(response != null){
+                    this.setUser(response.user);
+                    this.setIsAuth(true);
+                }
+            } else {
+                this.setUser(null);
+            }
+        } catch (error) {
+            console.error("Error checking authentication:", error); 
+        }
+    }
+}
